@@ -7,11 +7,13 @@ import "slick-carousel/slick/slick-theme.css";
 import DailyDiet from "./components/DailyDiet";
 
 
+
 const App: React.FC = () => {
   return (
     <Router>
       <div className="pt-16"> 
         <Header />
+
         <Routes>
           
         </Routes>
