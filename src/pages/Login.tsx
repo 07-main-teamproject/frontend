@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { validationRules } from "../components/ValidationRules";
+import { Link } from "react-router-dom";
 
 interface LoginFormData {
   email: string;
@@ -70,7 +71,13 @@ const LoginForm = () => {
         </form>
 
         <p className="text-center text-gray-600 mt-4">
-          아직 회원이 아니신가요? {/* 회원가입 링크 연결 */}
+          아직 회원이 아니신가요?{" "}
+          <Link
+            to="/signup"
+            className="text-[#64B17C] font-medium hover:underline"
+          >
+            회원가입
+          </Link>
         </p>
       </div>
     </div>
