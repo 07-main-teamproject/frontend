@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Header from "./components/Header";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import Signup from "./pages/Signup";
+import SignUpForm from "./pages/signup";
 import MainPage from "./pages/MainPage";
 
 const App: React.FC = () => {
@@ -14,7 +14,7 @@ const App: React.FC = () => {
       </div>
       <Routes>
         <Route path="/" element={<MainPage />} />
-        <Route path="/signup" element={<Signup />} />
+        <Route path="/signup" element={<SignUpForm />} />
       </Routes>
     </Router>
   );
