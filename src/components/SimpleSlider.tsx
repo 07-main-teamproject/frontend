@@ -18,8 +18,7 @@ const SimpleSlider: React.FC = () => {
     autoplay: true,
     autoplaySpeed: 5000,
 
-    // dotsClass:
-    //   ' flex item-center relative w-full p-0 m-0 list-none text-center ',
+    dotsClass: 'slick-dots relative! bottom-0! ',
   };
 
   return (
@@ -27,7 +26,11 @@ const SimpleSlider: React.FC = () => {
       <Slider {...settings}>
         {images.map((image, index) => (
           <div className="relative" key={index}>
-            <img src={image.url} alt={`슬라이드 ${index + 1}`} />
+            <img
+              src={image.url}
+              alt={`슬라이드 ${index + 1}`}
+              className="w-full h-[400px] object-cover "
+            />
             <p className="absolute bottom-0 left-0" />
             <p className="caption absolute bottom-0 left-0 text-black">
               {image.caption}

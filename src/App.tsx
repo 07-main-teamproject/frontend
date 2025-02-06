@@ -5,6 +5,7 @@ import Header from './components/Header';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import MainPage from './pages/MainPage';
+import Footer from './components/Footer';
 
 const App: React.FC = () => {
   return (
@@ -14,6 +15,7 @@ const App: React.FC = () => {
         <Routes></Routes>
       </div>
       <MainPage />
+      <Footer />
     </Router>
   );
 };

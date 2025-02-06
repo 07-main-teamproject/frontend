@@ -1,5 +1,5 @@
 import React from 'react';
-import MealCard from './MealCard';
+import MealCard from '../components/MealCard';
 // import meal1 from '../assets/meal1.jpg';
 // import meal2 from '../assets/meal2.jpg';
 // import meal3 from '../assets/meal3.jpg';
@@ -35,8 +35,10 @@ const meals = [
 const MealList: React.FC = () => {
   return (
     <>
-      <p className="mt-10">오늘의 나의 추천 식단</p>
-      <div className="flex justify-center gap-6 flex-wrap mt-10">
+      <p className=" flex items-center flex-col font-bold mt-10">
+        오늘의 나의 추천 식단
+      </p>
+      <div className="flex justify-center gap-6 mt-10">
         {meals.slice(1).map((meal, index) => (
           <MealCard key={index} {...meal} />
         ))}

@@ -32,15 +32,20 @@ const Header: React.FC = () => {
       {menuOpen && (
         <div className="md:hidden bg-white shadow-md">
           <nav className="flex flex-col items-center py-2">
-            <Link to="/" className="py-1 text-gray-700 text-sm">
-              홈
-            </Link>
-            <Link to="/recommendations" className="py-1 text-gray-700 text-sm">
-              추천 식단
-            </Link>
-            <Link to="/profile" className="py-1 text-gray-700 text-sm">
-              프로필
-            </Link>
+            <ul>
+              <Link to="/" className="py-1 text-gray-700 text-sm">
+                <li>홈</li>
+              </Link>
+              <Link
+                to="/recommendations"
+                className="py-1 text-gray-700 text-sm"
+              >
+                <li>추천식당</li>
+              </Link>
+              <Link to="/profile" className="py-1 text-gray-700 text-sm">
+                <li> 프로필</li>
+              </Link>
+            </ul>
           </nav>
         </div>
       )}
