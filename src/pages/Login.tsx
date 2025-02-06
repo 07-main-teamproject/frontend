@@ -1,5 +1,5 @@
 import { useForm } from "react-hook-form";
-import { validationRules } from "../components/VaildationRules";
+import { validationRules } from "../components/ValidationRules";
 
 interface LoginFormData {
   email: string;
