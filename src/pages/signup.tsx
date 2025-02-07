@@ -1,5 +1,5 @@
 import { useForm } from 'react-hook-form';
-import { validationRules } from '../components/VaildationRules';
+import { validationRules } from '../components/ValidationRules';
 
 interface FormData {
   email: string;
@@ -24,112 +24,122 @@ const SignUpForm = () => {
   const passwordValue = watch('password');
 
   return (
-    <div className="max-w-md mx-auto bg-white p-6 rounded-lg shadow-lg mt-10">
-      <h2 className="text-2xl font-semibold text-center text-gray-700 mb-6">
-        회원가입
-      </h2>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-green-50 to-green-100 relative">
+      <div className="max-w-md w-full bg-white p-8 rounded-xl shadow-xl border border-green-200">
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
+          건강한 회원가입 🍀
+        </h2>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-        <div>
-          <label className="block text-gray-700 font-medium">이메일</label>
-          <input
-            type="email"
-            {...register('email', validationRules.email)}
-            className={`w-full p-2 border rounded-md focus:outline-none focus:ring-2 ${
-              errors.email
-                ? 'border-red-500 focus:ring-red-400'
-                : 'border-gray-300 focus:ring-blue-400'
-            }`}
-          />
-          {errors.email && (
-            <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
-          )}
-        </div>
-
-        <div>
-          <label className="block text-gray-700 font-medium">비밀번호</label>
-          <input
-            type="password"
-            {...register('password', validationRules.password)}
-            className={`w-full p-2 border rounded-md focus:outline-none focus:ring-2 ${
-              errors.password
-                ? 'border-red-500 focus:ring-red-400'
-                : 'border-gray-300 focus:ring-blue-400'
-            }`}
-          />
-          {errors.password && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.password.message}
-            </p>
-          )}
-        </div>
-
-        <div>
-          <label className="block text-gray-700 font-medium">
-            비밀번호 확인
-          </label>
-          <input
-            type="password"
-            {...register(
-              'confirmPassword',
-              validationRules.confirmPassword(passwordValue),
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">
+              이메일
+            </label>
+            <input
+              type="email"
+              {...register('email', validationRules.email)}
+              className={`w-full p-3 border rounded-lg focus:outline-none transition ${
+                errors.email
+                  ? 'border-red-500 focus:ring-red-400'
+                  : 'border-[#64B17C] focus:ring-[#64B17C] hover:border-green-500'
+              }`}
+            />
+            {errors.email && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.email.message}
+              </p>
             )}
-            className={`w-full p-2 border rounded-md focus:outline-none focus:ring-2 ${
-              errors.password
-                ? 'border-red-500 focus:ring-red-400'
-                : 'border-gray-300 focus:ring-blue-400'
-            }`}
-          />
-          {errors.confirmPassword && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.confirmPassword.message}
-            </p>
-          )}
-        </div>
+          </div>
 
-        <div>
-          <label className="block text-gray-700 font-medium">이름</label>
-          <input
-            type="text"
-            {...register('username', validationRules.name)}
-            className={`w-full p-2 border rounded-md focus:outline-none focus:ring-2 ${
-              errors.username
-                ? 'border-red-500 focus:ring-red-400'
-                : 'border-gray-300 focus:ring-blue-400'
-            }`}
-          />
-          {errors.username && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.username.message}
-            </p>
-          )}
-        </div>
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">
+              비밀번호
+            </label>
+            <input
+              type="password"
+              {...register('password', validationRules.password)}
+              className={`w-full p-3 border rounded-lg focus:outline-none transition ${
+                errors.password
+                  ? 'border-red-500 focus:ring-red-400'
+                  : 'border-[#64B17C] focus:ring-[#64B17C] hover:border-green-500'
+              }`}
+            />
+            {errors.password && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.password.message}
+              </p>
+            )}
+          </div>
 
-        <div>
-          <label className="block text-gray-700 font-medium">닉네임</label>
-          <input
-            type="text"
-            {...register('nickname', validationRules.nickname)}
-            className={`w-full p-2 border rounded-md focus:outline-none focus:ring-2 ${
-              errors.nickname
-                ? 'border-red-500 focus:ring-red-400'
-                : 'border-gray-300 focus:ring-blue-400'
-            }`}
-          />
-          {errors.nickname && (
-            <p className="text-red-500 text-sm mt-1">
-              {errors.nickname.message}
-            </p>
-          )}
-        </div>
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">
+              비밀번호 확인
+            </label>
+            <input
+              type="password"
+              {...register(
+                'confirmPassword',
+                validationRules.confirmPassword(passwordValue),
+              )}
+              className={`w-full p-3 border rounded-lg focus:outline-none transition ${
+                errors.confirmPassword
+                  ? 'border-red-500 focus:ring-red-400'
+                  : 'border-[#64B17C] focus:ring-[#64B17C] hover:border-green-500'
+              }`}
+            />
+            {errors.confirmPassword && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.confirmPassword.message}
+              </p>
+            )}
+          </div>
 
-        <button
-          type="submit"
-          className="w-full bg-blue-500 text-white py-2 rounded-md"
-        >
-          가입하기
-        </button>
-      </form>
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">이름</label>
+            <input
+              type="text"
+              {...register('username', validationRules.name)}
+              className={`w-full p-3 border rounded-lg focus:outline-none transition ${
+                errors.username
+                  ? 'border-red-500 focus:ring-red-400'
+                  : 'border-[#64B17C] focus:ring-[#64B17C] hover:border-green-500'
+              }`}
+            />
+            {errors.username && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.username.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label className="block text-gray-700 font-medium mb-1">
+              닉네임
+            </label>
+            <input
+              type="text"
+              {...register('nickname', validationRules.nickname)}
+              className={`w-full p-3 border rounded-lg focus:outline-none transition ${
+                errors.nickname
+                  ? 'border-red-500 focus:ring-red-400'
+                  : 'border-[#64B17C] focus:ring-[#64B17C] hover:border-green-500'
+              }`}
+            />
+            {errors.nickname && (
+              <p className="text-red-500 text-sm mt-1">
+                {errors.nickname.message}
+              </p>
+            )}
+          </div>
+
+          <button
+            type="submit"
+            className="w-full bg-[#64B17C] text-white py-3 rounded-lg text-lg font-semibold transition duration-200 hover:bg-[#569b6e] shadow-md"
+          >
+            가입하기
+          </button>
+        </form>
+      </div>
     </div>
   );
 };
