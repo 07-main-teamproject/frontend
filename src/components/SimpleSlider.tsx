@@ -41,16 +41,6 @@ const SimpleSlider: React.FC = () => {
   );
 };
 
-interface Settings {
-  dots: boolean;
-  infinite: boolean;
-  speed: number;
-  slidesToShow: number;
-  slidesToScroll: number;
-  autoplay?: boolean;
-  autoplaySpeed?: number;
-}
-
 export default SimpleSlider;
 
 // {
