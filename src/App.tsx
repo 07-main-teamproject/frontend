@@ -1,21 +1,20 @@
-import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Header from './components/Header';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import SignUpForm from './pages/signup';
+import SignUpForm from './pages/Signup';
 
-const App: React.FC = () => {
+function App() {
   return (
     <Router>
       <div className="pt-16">
         <Header />
       </div>
       <Routes>
-        <Route path="/signup" element={<SignUpForm />} />
+        <Route path="/Signup" element={<SignUpForm />} />
       </Routes>
     </Router>
   );
-};
+}
 
 export default App;

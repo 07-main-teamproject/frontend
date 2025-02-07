@@ -1,5 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { validationRules } from '../components/ValidationRules';
+import { Link } from 'react-router-dom';
 
 interface FormData {
   email: string;
@@ -131,6 +132,13 @@ const SignUpForm = () => {
               </p>
             )}
           </div>
+
+          <p className="text-gray-600 text-sm text-center">
+            이미 계정이 있으신가요?{' '}
+            <Link to="/Login" className="text-[#64B17C]">
+              로그인
+            </Link>
+          </p>
 
           <button
             type="submit"
