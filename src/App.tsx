@@ -1,7 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Header from './components/Header';
-import Footer from './components/Footer';
+
 import MainPage from './pages/MainPage';
 import CardDetail from './pages/CardDetail';
 
@@ -15,10 +15,9 @@ const App: React.FC = () => {
         <Header />
         <Routes>
           <Route path="/" element={<MainPage />} />
+          <Route path="/CardDetail" element={<CardDetail />} />
         </Routes>
       </div>
-      <MainPage />
-      <Footer />
     </Router>
   );
 };

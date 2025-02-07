@@ -31,9 +31,9 @@ const MealCard: React.FC<MealCardProps> = ({
 
         {/* 버튼 */}
         <Link to="/CardDetail">
-          <button className="mt-4 bg-[#64B17C] text-white py-2 px-4 rounded-full w-full hover:bg-green-600">
+          <div className="mt-4 bg-[#64B17C] text-white py-2 px-4 rounded-full w-full hover:bg-green-600">
             {buttonText}
-          </button>
+          </div>
         </Link>
       </>
     </div>

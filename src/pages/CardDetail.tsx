@@ -13,9 +13,9 @@ const user = {
 export default function CardDetail() {
   return (
     <div>
-      <Link to="/" className="text-md font-semibold text-green-600">
+      {/* <Link to="/" className="text-md font-semibold text-green-600">
         Diet Story
-      </Link>
+      </Link> */}
       <p>나의 식단관리</p>
 
       {/* {프로필 정보 기반으로 식단추천} */}
