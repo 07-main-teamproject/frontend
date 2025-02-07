@@ -1,26 +1,20 @@
-import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Header from "./components/Header";
-import CustomArrows from "./components/Main"
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
-import DailyDiet from "./components/DailyDiet";
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Header from './components/Header';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import SignUpForm from './pages/Signup';
 
-
-const App: React.FC = () => {
+function App() {
   return (
     <Router>
-      <div className="pt-16"> 
+      <div className="pt-16">
         <Header />
-        <Routes>
-          
-        </Routes>
       </div>
-      <CustomArrows/>
-      <DailyDiet/>
+      <Routes>
+        <Route path="/signup" element={<SignUpForm />} />
+      </Routes>
     </Router>
   );
-};
-
+}
 
 export default App;
