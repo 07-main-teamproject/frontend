@@ -21,10 +21,7 @@ const Header: React.FC = () => {
         </div>
 
         {/* ✅ 모바일 프로필 버튼 (크기 줄이기) */}
-        <button
-          className="md:hidden p-1"
-          onClick={() => setMenuOpen(!menuOpen)}
-        >
+        <button className=" p-1" onClick={() => setMenuOpen(!menuOpen)}>
           <User className="w-5 h-5 text-gray-700" />
         </button>
       </div>
