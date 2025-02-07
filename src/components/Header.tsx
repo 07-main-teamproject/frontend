@@ -28,7 +28,7 @@ const Header: React.FC = () => {
 
       {/* ✅ 모바일 프로필 메뉴 */}
       {menuOpen && (
-        <div className="md:hidden bg-white shadow-md">
+        <div className=" bg-white shadow-md">
           <nav className="flex flex-col items-center py-2">
             <ul>
               <Link to="/" className="py-1 text-gray-700 text-sm">
