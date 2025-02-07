@@ -1,4 +1,3 @@
-import React from 'react';
 import MealCard from '../components/MealCard';
 // import meal1 from '../assets/meal1.jpg';
 // import meal2 from '../assets/meal2.jpg';
