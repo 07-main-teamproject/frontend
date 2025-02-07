@@ -11,7 +11,7 @@ function App() {
         <Header />
       </div>
       <Routes>
-        <Route path="/Signup" element={<SignUpForm />} />
+        <Route path="/signup" element={<SignUpForm />} />
       </Routes>
     </Router>
   );
