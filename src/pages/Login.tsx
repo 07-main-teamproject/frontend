@@ -70,6 +70,32 @@ const LoginForm = () => {
           </button>
         </form>
 
+        <div className="flex space-x-10 justify-center mt-4">
+          <button className="w-14 h-14 flex items-center justify-center rounded-full shadow-md hover:shadow-lg active:scale-95 transition">
+            <img
+              src="/images/google-icon.png"
+              alt="Kakao Login"
+              className="w-14 h-14"
+            />
+          </button>
+
+          <button className="w-14 h-14 flex items-center justify-center rounded-full shadow-md hover:shadow-lg active:scale-95 transition">
+            <img
+              src="/images/naver-icon.png"
+              alt="Naver Login"
+              className="w-14 h-14"
+            />
+          </button>
+
+          <button className="w-14 h-14 flex items-center justify-center rounded-full shadow-md hover:shadow-lg active:scale-95 transition">
+            <img
+              src="/images/kakao-icon.png"
+              alt="Kakao Login"
+              className="w-14 h-14"
+            />
+          </button>
+        </div>
+
         <p className="text-center text-gray-600 mt-4">
           아직 회원이 아니신가요?{" "}
           <Link
