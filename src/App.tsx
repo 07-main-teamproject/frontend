@@ -3,7 +3,7 @@ import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
 import Header from "./components/Header";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import MyPage from "./pages/MyPage";
+import MyPage from "./pages/ProfilePage";
 
 const App: React.FC = () => {
   return (
@@ -12,7 +12,7 @@ const App: React.FC = () => {
         <Header />
       </div>
       <Routes>
-        <Route path="/mypage" element={<MyPage />} />
+        <Route path="/profile" element={<MyPage />} />
       </Routes>
     </Router>
   );
