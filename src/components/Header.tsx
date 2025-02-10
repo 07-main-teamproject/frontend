@@ -4,7 +4,7 @@ import { Search, User } from 'lucide-react';
 
 const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
-  // const isLoggedIn: boolean = false; // TODO: 로그인 상태 API 연동 필요
+  // const isLoggedIn: boolean = false; // @TODO: 로그인 상태 API 연동 필요
 
   return (
     <header className="bg-white shadow-md fixed top-0 w-full z-50 h-14">
