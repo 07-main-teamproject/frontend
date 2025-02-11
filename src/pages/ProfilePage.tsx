@@ -14,9 +14,7 @@ const ProfilePage: React.FC = () => {
 
   const [isEditing, setIsEditing] = useState(false);
 
-  const handleChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setProfile((prev) => ({
       ...prev,
@@ -38,46 +36,34 @@ const ProfilePage: React.FC = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">
-      <h2 className="text-2xl font-bold mb-4">프로필 설정</h2>
+    <div className="max-w-md mx-auto p-6 bg-white rounded-xl shadow-lg">
+      <h2 className="text-2xl font-bold text-gray-800 text-center mb-6">프로필 설정</h2>
 
-      <div className="bg-gray-100 p-4 rounded-lg flex items-center space-x-4 shadow">
+      <div className="bg-gray-100 p-5 rounded-lg flex items-center space-x-4 shadow-md">
         <label htmlFor="imageUpload" className="cursor-pointer">
           <img
             src={profile.image || "https://via.placeholder.com/150"}
             alt="프로필"
-            className="w-20 h-20 rounded-full object-cover border"
+            className="w-24 h-24 rounded-full object-cover border-2 border-gray-300 hover:opacity-80 active:scale-95 transition-all"
           />
         </label>
         {isEditing && (
-          <input
-            type="file"
-            id="imageUpload"
-            accept="image/*"
-            onChange={handleImageUpload}
-            className="hidden"
-          />
+          <input type="file" id="imageUpload" accept="image/*" onChange={handleImageUpload} className="hidden" />
         )}
-
-        <div className="flex-1 text-lg font-semibold">{profile.nickname}</div>
+        <div className="flex-1 text-xl font-semibold text-gray-700">{profile.nickname}</div>
       </div>
 
-      <div className="bg-gray-50 p-4 rounded-lg shadow mt-4">
+      <div className="bg-gray-50 p-5 rounded-lg shadow-md mt-5">
         {[
-          {
-            label: "성별",
-            name: "gender",
-            type: "select",
-            options: ["남성", "여성"],
-          },
+          { label: "성별", name: "gender", type: "select", options: ["남성", "여성"] },
           { label: "나이", name: "age", type: "number" },
           { label: "키 (cm)", name: "height", type: "number" },
           { label: "몸무게 (kg)", name: "weight", type: "number" },
           { label: "알레르기", name: "allergies", type: "text" },
           { label: "음식 선호도", name: "foodPreferences", type: "text" },
         ].map((field) => (
-          <div key={field.name} className="flex items-center gap-4 mb-2">
-            <label className="w-1/3 text-gray-700">{field.label}:</label>
+          <div key={field.name} className="flex items-center gap-4 mb-4">
+            <label className="w-1/3 text-gray-700 font-medium">{field.label}:</label>
 
             {field.type === "select" ? (
               <select
@@ -85,7 +71,7 @@ const ProfilePage: React.FC = () => {
                 value={profile[field.name as keyof typeof profile]}
                 onChange={handleChange}
                 disabled={!isEditing}
-                className="w-2/3 border p-2 rounded"
+                className="w-2/3 border border-gray-300 p-2 rounded-lg focus:ring-[#64B17C] focus:border-[#64B17C] disabled:bg-gray-200"
               >
                 {field.options?.map((option) => (
                   <option key={option} value={option}>
@@ -100,7 +86,7 @@ const ProfilePage: React.FC = () => {
                 value={profile[field.name as keyof typeof profile]}
                 onChange={handleChange}
                 disabled={!isEditing}
-                className="w-2/3 border p-2 rounded"
+                className="w-2/3 border border-gray-300 p-2 rounded-lg focus:ring-[#64B17C] focus:border-[#64B17C] disabled:bg-gray-200"
               />
             )}
           </div>
@@ -109,7 +95,7 @@ const ProfilePage: React.FC = () => {
 
       <button
         onClick={() => setIsEditing(!isEditing)}
-        className="mt-4 w-full bg-[#64B17C] text-white py-2 rounded hover:bg-[#64B17C]"
+        className="mt-6 w-full bg-[#64B17C] text-white py-3 rounded-lg hover:opacity-90 active:scale-95 transition-all"
       >
         {isEditing ? "저장" : "수정"}
       </button>
