@@ -4,6 +4,7 @@ import 'slick-carousel/slick/slick-theme.css';
 import SignUpForm from './pages/Signup';
 import MainPage from './pages/MainPage';
 import Header from './components/Header';
+import MyPage from "./pages/ProfilePage";
 
 const App: React.FC = () => {
   return (
@@ -12,6 +13,7 @@ const App: React.FC = () => {
         <Header />
       </div>
       <Routes>
+        <Route path="/profile" element={<MyPage />} />
         <Route path="/" element={<MainPage />} />
         <Route path="/signup" element={<SignUpForm />} />
       </Routes>

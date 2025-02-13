@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Search, User } from 'lucide-react';
+import { useState } from "react";
+import { Link } from "react-router-dom"; 
+import { Search, User } from "lucide-react";
 
 const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
