@@ -1,8 +1,9 @@
-import React from "react";
-import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
-import Header from "./components/Header";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import SignUpForm from './pages/Signup';
+import MainPage from './pages/MainPage';
+import Header from './components/Header';
 import MyPage from "./pages/ProfilePage";
 
 const App: React.FC = () => {
@@ -13,6 +14,8 @@ const App: React.FC = () => {
       </div>
       <Routes>
         <Route path="/profile" element={<MyPage />} />
+        <Route path="/" element={<MainPage />} />
+        <Route path="/signup" element={<SignUpForm />} />
       </Routes>
     </Router>
   );
