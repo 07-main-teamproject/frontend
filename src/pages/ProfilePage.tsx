@@ -3,6 +3,8 @@ import { useAtom } from "jotai";
 import { profileAtom, isEditingAtom, loadingAtom, errorAtom } from "../store/profileAtom";
 import axios from "axios";
 
+const defaultProfileImage = "";
+
 const ProfilePage = () => {
   const [profile, setProfile] = useAtom(profileAtom);
   const [isEditing, setIsEditing] = useAtom(isEditingAtom);
@@ -13,10 +15,13 @@ const ProfilePage = () => {
     const fetchProfile = async () => {
       try {
         setLoading(true);
-        const res = await axios.get("/api/user/profile"); // 백엔드 API 요청
+        const res = await axios.get("/api/user/profile");
+        const backendProfile = res.data;
+    
         setProfile((prev) => ({
           ...prev,
-          ...res.data, // 백엔드에서 받은 데이터 반영
+          ...backendProfile,
+          profileImage: backendProfile.profileImage || defaultProfileImage, // 기본 이미지 유지
         }));
       } catch (err) {
         console.error("프로필 불러오기 실패:", err);
@@ -25,7 +30,6 @@ const ProfilePage = () => {
         setLoading(false);
       }
     };
-
     fetchProfile();
   }, []);
 
@@ -39,10 +43,11 @@ const ProfilePage = () => {
   };
 
   const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (!isEditing) return;
     if (!event.target.files?.[0]) return;
-
+  
     const file = event.target.files[0];
-
+  
     try {
       const base64 = await convertFileToBase64(file);
       setProfile((prev) => ({ ...prev, profileImage: base64 }));
@@ -89,8 +94,14 @@ const ProfilePage = () => {
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">프로필 설정 🏡</h2>
 
         <div className="flex flex-col items-center md:flex-row md:items-center md:justify-center bg-gray-50 p-4 rounded-lg shadow-sm gap-30">
-          <label className="cursor-pointer">
-            <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} disabled={!isEditing} />
+          <label className={`cursor-pointer ${isEditing ? "opacity-100" : "opacity-50 cursor-not-allowed"}`}>
+            <input 
+              type="file" 
+              accept="image/*" 
+              className="hidden" 
+              onChange={handleImageChange} 
+              disabled={!isEditing} 
+            />
             <div className="w-24 h-24 rounded-full border-2 border-[#64B17C] flex items-center justify-center overflow-hidden">
               {profile.profileImage ? (
                 <img src={profile.profileImage} alt="프로필" className="w-full h-full object-cover" />
