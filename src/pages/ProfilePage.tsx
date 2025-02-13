@@ -1,82 +1,82 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import { useAtom } from "jotai";
+import { profileAtom, isEditingAtom, loadingAtom, errorAtom } from "../store/profileAtom";
 import axios from "axios";
 
-interface ProfileData {
-  profileImage: string;
-  nickname: string;
-  gender: "남성" | "여성";
-  age: number;
-  height: number;
-  weight: number;
-  target_weight: number;
-  allergies: string;
-  foodPreferences: string;
-}
-
-const API_BASE_URL = "/api/user/profile/";
-
 const ProfilePage = () => {
-  const defaultProfile: ProfileData = {
-    profileImage: "",
-    nickname: "",
-    gender: "남성",
-    age: 0,
-    height: 0,
-    weight: 0,
-    target_weight: 0,
-    allergies: "",
-    foodPreferences: "",
-  };
+  const [profile, setProfile] = useAtom(profileAtom);
+  const [isEditing, setIsEditing] = useAtom(isEditingAtom);
+  const [loading, setLoading] = useAtom(loadingAtom);
+  const [error, setError] = useAtom(errorAtom);
 
-  const [profile, setProfile] = useState<ProfileData>(defaultProfile);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [isEditing, setIsEditing] = useState<boolean>(false)
-
-  //  프로필 조회
   useEffect(() => {
-    axios
-      .get<ProfileData>(API_BASE_URL)
-      .then((res) => setProfile(res.data || defaultProfile))
-      .catch(() => setError("프로필을 불러오는 중 오류가 발생했습니다."))
-      .finally(() => setLoading(false));
+    const fetchProfile = async () => {
+      try {
+        setLoading(true);
+        const res = await axios.get("/api/user/profile"); // 백엔드 API 요청
+        setProfile((prev) => ({
+          ...prev,
+          ...res.data, // 백엔드에서 받은 데이터 반영
+        }));
+      } catch (err) {
+        console.error("프로필 불러오기 실패:", err);
+        setError("프로필을 불러오는 중 오류가 발생했습니다.");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProfile();
   }, []);
 
-  // 프로필 이미지 변경
+  const convertFileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
   const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files?.[0]) return;
 
     const file = event.target.files[0];
-    const formData = new FormData();
-    formData.append("profileImage", file);
 
     try {
-      const res = await axios.put(`${API_BASE_URL}upload`, formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-      setProfile((prev) => ({ ...prev, profileImage: res.data.profileImage }));
-    } catch (err) {
-      setError("이미지 업로드 실패");
+      const base64 = await convertFileToBase64(file);
+      setProfile((prev) => ({ ...prev, profileImage: base64 }));
+      localStorage.setItem("profileImage", base64); // `localStorage`에 저장
+    } catch (error) {
+      console.error("이미지 변환 오류:", error);
     }
   };
 
-  // 입력값 변경 핸들러
+  useEffect(() => {
+    const savedImage = localStorage.getItem("profileImage");
+    if (savedImage) {
+      setProfile((prev) => ({ ...prev, profileImage: savedImage }));
+    }
+  }, []);
+
   const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = event.target;
-    setProfile((prev) => ({ ...prev, [name]: value }));
+    const newValue = event.target.type === "number" ? Math.max(0, Number(value)) : value;
+    setProfile((prev) => ({ ...prev, [name]: newValue }));
   };
 
-  const handleEdit = () => {
-    setIsEditing(true)
-  }
-
-  // 프로필 저장
-  const handleSave = async () => {
+  const handleSaveProfile = async () => {
     try {
-      await axios.put(API_BASE_URL, profile);
+      await axios.put("/api/user/profile", {
+        ...profile,
+        profileImage: undefined, // 로컬 저장
+      });
+
       alert("프로필이 저장되었습니다!");
-    } catch (err) {
-      setError("프로필 저장 실패");
+      setIsEditing(false); // 수정 모드 비활성화
+    } catch (error) {
+      console.error("프로필 저장 실패:", error);
+      setError("프로필 저장 중 오류가 발생했습니다.");
     }
   };
 
@@ -88,10 +88,9 @@ const ProfilePage = () => {
       <div className="max-w-lg w-full bg-white p-8 rounded-xl shadow-lg">
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">프로필 설정 🏡</h2>
 
-        <div className="flex flex-col items-center md:flex-row md:items-center md:justify-center bg-gray-50 p-4 rounded-lg shadow-sm gap-25">
-
+        <div className="flex flex-col items-center md:flex-row md:items-center md:justify-center bg-gray-50 p-4 rounded-lg shadow-sm gap-30">
           <label className="cursor-pointer">
-            <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
+            <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} disabled={!isEditing} />
             <div className="w-24 h-24 rounded-full border-2 border-[#64B17C] flex items-center justify-center overflow-hidden">
               {profile.profileImage ? (
                 <img src={profile.profileImage} alt="프로필" className="w-full h-full object-cover" />
@@ -100,7 +99,6 @@ const ProfilePage = () => {
               )}
             </div>
           </label>
-
           <p className="text-xl font-semibold text-gray-800">{profile.nickname || "사용자"}</p>
         </div>
 
@@ -110,36 +108,20 @@ const ProfilePage = () => {
             { label: "나이", name: "age", type: "number" },
             { label: "키 (cm)", name: "height", type: "number" },
             { label: "몸무게 (kg)", name: "weight", type: "number" },
-            { label: "목표 몸무게 (kg)", name: "target_weight", type: "number"},
+            { label: "목표 몸무게 (kg)", name: "target_weight", type: "number" },
             { label: "알레르기", name: "allergies", type: "text", placeholder: "예: 견과류, 유제품..." },
             { label: "음식 선호도", name: "foodPreferences", type: "text", placeholder: "예: 한식, 양식, 중식..." },
           ].map((field, index) => (
             <div key={index} className="flex items-center space-x-4">
               <label className="w-32 text-gray-700 font-medium">{field.label}</label>
               {field.type === "select" ? (
-                <select
-                  name={field.name}
-                  value={(profile as any)[field.name]}
-                  onChange={handleChange}
-                  className="flex-1 p-3 border rounded-lg focus:outline-none border-gray-300"
-                  disabled={!isEditing}
-                >
+                <select name={field.name} value={(profile as any)[field.name]} onChange={handleChange} className="flex-1 p-3 border rounded-lg focus:outline-none border-gray-300" disabled={!isEditing}>
                   {field.options?.map((option) => (
-                    <option key={option} value={option}>
-                      {option}
-                    </option>
+                    <option key={option} value={option}>{option}</option>
                   ))}
                 </select>
               ) : (
-                <input
-                  type={field.type}
-                  name={field.name}
-                  value={(profile as any)[field.name]}
-                  onChange={handleChange}
-                  placeholder={field.placeholder}
-                  className="flex-1 p-3 border rounded-lg focus:outline-none border-gray-300"
-                  disabled={!isEditing}
-                />
+                <input type={field.type} name={field.name} value={(profile as any)[field.name]} onChange={handleChange} min="0" placeholder={field.placeholder} className="flex-1 p-3 border rounded-lg focus:outline-none border-gray-300" disabled={!isEditing} />
               )}
             </div>
           ))}
@@ -147,12 +129,9 @@ const ProfilePage = () => {
 
         <div className="mt-6 flex space-x-4">
           {!isEditing ? (
-            <button onClick={handleEdit} className="w-full bg-[#64B17C] text-white py-3 rounded-lg text-lg font-semibold transition hover:bg-[#569b6e] shadow-md">
-              수정하기
-            </button> ) : (
-            <button onClick={handleSave} className="w-full bg-[#64B17C] text-white py-3 rounded-lg text-lg font-semibold transition hover:bg-[#569b6e] shadow-md">
-              저장하기
-            </button>
+            <button onClick={() => setIsEditing(true)} className="w-full bg-[#64B17C] text-white py-3 rounded-lg text-lg font-semibold transition hover:bg-[#569b6e] shadow-md">수정하기</button>
+          ) : (
+            <button onClick={handleSaveProfile} className="w-full bg-[#64B17C] text-white py-3 rounded-lg text-lg font-semibold transition hover:bg-[#569b6e] shadow-md">저장하기</button>
           )}
         </div>
       </div>
