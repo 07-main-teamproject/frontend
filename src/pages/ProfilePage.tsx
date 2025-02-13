@@ -92,8 +92,8 @@ const ProfilePage = () => {
     <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
       <div className="max-w-lg w-full bg-white p-8 rounded-xl shadow-lg">
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">프로필 설정 🏡</h2>
-
-        <div className="flex flex-col items-center md:flex-row md:items-center md:justify-center bg-gray-50 p-4 rounded-lg shadow-sm gap-30">
+  
+        <div className="flex flex-col sm:flex-row items-center sm:justify-center bg-gray-50 p-4 rounded-lg shadow-sm gap-10">
           <label className={`cursor-pointer ${isEditing ? "opacity-100" : "opacity-50 cursor-not-allowed"}`}>
             <input 
               type="file" 
@@ -102,7 +102,7 @@ const ProfilePage = () => {
               onChange={handleImageChange} 
               disabled={!isEditing} 
             />
-            <div className="w-24 h-24 rounded-full border-2 border-[#64B17C] flex items-center justify-center overflow-hidden">
+            <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-2 border-[#64B17C] flex items-center justify-center overflow-hidden">
               {profile.profileImage ? (
                 <img src={profile.profileImage} alt="프로필" className="w-full h-full object-cover" />
               ) : (
@@ -123,26 +123,30 @@ const ProfilePage = () => {
             { label: "알레르기", name: "allergies", type: "text", placeholder: "예: 견과류, 유제품..." },
             { label: "음식 선호도", name: "foodPreferences", type: "text", placeholder: "예: 한식, 양식, 중식..." },
           ].map((field, index) => (
-            <div key={index} className="flex items-center space-x-4">
-              <label className="w-32 text-gray-700 font-medium">{field.label}</label>
+            <div key={index} className="flex flex-col sm:flex-row items-center space-y-2 sm:space-y-0 sm:space-x-4">
+              <label className="w-full sm:w-32 text-gray-700 font-medium text-center sm:text-left">{field.label}</label>
               {field.type === "select" ? (
-                <select name={field.name} value={(profile as any)[field.name]} onChange={handleChange} className="flex-1 p-3 border rounded-lg focus:outline-none border-gray-300" disabled={!isEditing}>
+                <select name={field.name} value={(profile as any)[field.name]} onChange={handleChange} className="w-full sm:flex-1 p-3 border rounded-lg focus:outline-none border-gray-300" disabled={!isEditing}>
                   {field.options?.map((option) => (
                     <option key={option} value={option}>{option}</option>
                   ))}
                 </select>
               ) : (
-                <input type={field.type} name={field.name} value={(profile as any)[field.name]} onChange={handleChange} min="0" placeholder={field.placeholder} className="flex-1 p-3 border rounded-lg focus:outline-none border-gray-300" disabled={!isEditing} />
+                <input type={field.type} name={field.name} value={(profile as any)[field.name]} onChange={handleChange} min="0" placeholder={field.placeholder} className="w-full sm:flex-1 p-3 border rounded-lg focus:outline-none border-gray-300" disabled={!isEditing} />
               )}
             </div>
           ))}
         </div>
-
-        <div className="mt-6 flex space-x-4">
+  
+        <div className="mt-6 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
           {!isEditing ? (
-            <button onClick={() => setIsEditing(true)} className="w-full bg-[#64B17C] text-white py-3 rounded-lg text-lg font-semibold transition hover:bg-[#569b6e] shadow-md">수정하기</button>
+            <button onClick={() => setIsEditing(true)} className="w-full lg:w-full bg-[#64B17C] text-white py-3 rounded-lg text-lg font-semibold transition hover:bg-[#569b6e] shadow-md">
+              수정하기
+            </button>
           ) : (
-            <button onClick={handleSaveProfile} className="w-full bg-[#64B17C] text-white py-3 rounded-lg text-lg font-semibold transition hover:bg-[#569b6e] shadow-md">저장하기</button>
+            <button onClick={handleSaveProfile} className="w-full lg:w-full bg-[#64B17C] text-white py-3 rounded-lg text-lg font-semibold transition hover:bg-[#569b6e] shadow-md">
+              저장하기
+            </button>
           )}
         </div>
       </div>
