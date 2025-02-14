@@ -29,7 +29,7 @@ const MealCard: React.FC<MealCardProps> = ({
         <p className="text-sm text-gray-600 mt-2">{description}</p>
 
         {/* 버튼 */}
-        <button className="mt-4 bg-green-500 text-white py-2 px-4 rounded-full w-full hover:bg-green-600">
+        <button className="mt-4 bg-[#64B17C] text-white py-2 px-4 rounded-full w-full hover:bg-green-600">
           {buttonText}
         </button>
       </>
