@@ -23,7 +23,7 @@ export default function AdBanner() {
         <img
           src={randomAd.advertiseUrl}
           alt="광고 배너"
-          className="w-full h-auto max-h-[100px] object-cover"
+          className="w-full h-auto max-h-[150px] object-cover"
         />
       </a>
     </div>

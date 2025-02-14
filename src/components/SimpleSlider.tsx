@@ -28,7 +28,7 @@ const SimpleSlider: React.FC = () => {
             <img
               src={image.url}
               alt={`슬라이드 ${index + 1}`}
-              className="w-full h-[400px] object-cover "
+              className="w-full h-[500px] object-cover "
             />
             <p className="absolute bottom-0 left-0" />
             <p className="caption absolute bottom-0 left-0 text-black">
