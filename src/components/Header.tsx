@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Search, User } from 'lucide-react';
 
-
 const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   // const isLoggedIn: boolean = false; // TODO: 로그인 상태 API 연동 필요

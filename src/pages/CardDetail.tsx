@@ -1,4 +1,3 @@
-
 import { User, Trash2, Plus, X } from 'lucide-react';
 import { atom, useAtom } from 'jotai';
 import Modal from '../domain/Detail/Modal';
