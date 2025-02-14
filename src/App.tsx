@@ -1,9 +1,9 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Route, Routes, BrowserRouter as Router } from "react-router-dom";
 import Header from "./components/Header";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import LoginForm from "./pages/Login";
+import MyPage from "./pages/MyPage";
 
 const App: React.FC = () => {
   return (
@@ -12,7 +12,7 @@ const App: React.FC = () => {
         <Header />
       </div>
       <Routes>
-        <Route path="/login" element={<LoginForm />} />
+        <Route path="/mypage" element={<MyPage />} />
       </Routes>
     </Router>
   );
