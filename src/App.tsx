@@ -3,7 +3,6 @@ import Header from './components/Header';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import ProfilePage from './pages/ProfilePage';
-import SignUpForm from './pages/signup';
 
 function App() {
   return (
@@ -13,7 +12,6 @@ function App() {
       </div>
       <Routes>
         <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/signup" element={<SignUpForm />} />
       </Routes>
     </Router>
   );
