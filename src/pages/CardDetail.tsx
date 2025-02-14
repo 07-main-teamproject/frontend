@@ -1,3 +1,4 @@
+
 import { User, Trash2, Plus, X } from 'lucide-react';
 import { atom, useAtom } from 'jotai';
 import Modal from '../domain/Detail/Modal';
@@ -98,3 +99,8 @@ const CardDetail: React.FC = () => {
 };
 
 export default CardDetail;
+=======
+export default function CardDetail() {
+  return <div></div>;
+}
+
