@@ -1,6 +1,6 @@
-import { useForm } from "react-hook-form";
-import { validationRules } from "../components/ValidationRules";
-import { Link } from "react-router-dom";
+import { useForm } from 'react-hook-form';
+import { validationRules } from '../components/ValidationRules';
+import { Link } from 'react-router-dom';
 
 interface LoginFormData {
   email: string;
@@ -34,7 +34,7 @@ const LoginForm = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm 
                          focus:outline-none focus:ring-2 focus:ring-[#64B17C] 
                          focus:border-[#64B17C] focus:shadow-md transition-shadow duration-200"
-              {...register("email", validationRules.email)}
+              {...register('email', validationRules.email)}
             />
             {errors.email && (
               <p className="text-red-500 text-sm mt-1">
@@ -52,7 +52,7 @@ const LoginForm = () => {
               className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm 
                          focus:outline-none focus:ring-2 focus:ring-[#64B17C] 
                          focus:border-[#64B17C] focus:shadow-md transition-shadow duration-200"
-              {...register("password", validationRules.password)}
+              {...register('password', validationRules.password)}
             />
             {errors.password && (
               <p className="text-red-500 text-sm mt-1">
@@ -96,7 +96,7 @@ const LoginForm = () => {
         </div>
 
         <p className="text-center text-gray-600 mt-4">
-          아직 회원이 아니신가요?{" "}
+          아직 회원이 아니신가요?{' '}
           <Link
             to="/signup"
             className="text-[#64B17C] font-medium hover:underline"
