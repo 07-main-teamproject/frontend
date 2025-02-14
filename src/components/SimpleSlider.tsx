@@ -1,28 +1,25 @@
-import React from "react";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import React from 'react';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 const SimpleSlider: React.FC = () => {
   const images = [
-    { url:'/images/food1.png',
-      caption : 'hi'
-      },
-    { url:'/images/food2.jpg',
-      caption: 'hello'
-    }
-    
-
+    { url: '/images/food1.png', caption: 'hi' },
+    { url: '/images/food2.jpg', caption: 'hello' },
   ];
 
-  const settings: Settings = {
+  const settings = {
     dots: true,
     infinite: true,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true,
-    autoplaySpeed: 5000
+    autoplaySpeed: 5000,
+
+    // dotsClass:
+    //   ' flex item-center relative w-full p-0 m-0 list-none text-center ',
   };
 
   return (
@@ -30,15 +27,12 @@ const SimpleSlider: React.FC = () => {
       <Slider {...settings}>
         {images.map((image, index) => (
           <div className="relative" key={index}>
-            <img 
-              src={image.url} 
-              alt={`슬라이드 ${index + 1}`}
-              
-            />
+            <img src={image.url} alt={`슬라이드 ${index + 1}`} />
             <p className="absolute bottom-0 left-0" />
-            <p className="caption absolute bottom-0 left-0 text-black">{image.caption}</p>
+            <p className="caption absolute bottom-0 left-0 text-black">
+              {image.caption}
+            </p>
           </div>
-      
         ))}
       </Slider>
     </div>
