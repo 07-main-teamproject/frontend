@@ -99,8 +99,3 @@ const CardDetail: React.FC = () => {
 };
 
 export default CardDetail;
-=======
-export default function CardDetail() {
-  return <div></div>;
-}
-
