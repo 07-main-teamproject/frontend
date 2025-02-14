@@ -15,6 +15,7 @@ function App() {
       </div>
       <Routes>
         <Route path="/profile" element={<ProfilePage />} />
+        <Route path="/" element={<MainPage />} />
         <Route path="/signup" element={<SignUpForm />} />
       </Routes>
       <MainPage />
