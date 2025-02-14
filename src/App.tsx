@@ -1,15 +1,12 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Header from './components/Header';
-
+import MainPage from './pages/MainPage';
 import CardDetail from './pages/CardDetail';
-
+import SignUpForm from './pages/Signup';
+import ProfilePage from './pages/ProfilePage';
+import LoginForm from './pages/Login';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-
-import LoginForm from './pages/Login';
-import ProfilePage from './pages/ProfilePage';
-import MainPage from './pages/MainPage';
-import SignUpForm from './pages/Signup';
 
 function App() {
   return (
