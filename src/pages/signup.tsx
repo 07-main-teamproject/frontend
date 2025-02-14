@@ -133,9 +133,35 @@ const SignUpForm = () => {
             )}
           </div>
 
+          <div className="flex space-x-10 justify-center mt-4">
+            <button className="w-14 h-14 flex items-center justify-center rounded-full shadow-md hover:shadow-lg active:scale-95 transition">
+              <img
+                src="/images/google-icon.png"
+                alt="Kakao Login"
+                className="w-14 h-14"
+              />
+            </button>
+
+            <button className="w-14 h-14 flex items-center justify-center rounded-full shadow-md hover:shadow-lg active:scale-95 transition">
+              <img
+                src="/images/naver-icon.png"
+                alt="Naver Login"
+                className="w-14 h-14"
+              />
+            </button>
+
+            <button className="w-14 h-14 flex items-center justify-center rounded-full shadow-md hover:shadow-lg active:scale-95 transition">
+              <img
+                src="/images/kakao-icon.png"
+                alt="Kakao Login"
+                className="w-14 h-14"
+              />
+            </button>
+          </div>
+
           <p className="text-gray-600 text-sm text-center">
             이미 계정이 있으신가요?{' '}
-            <Link to="/Login" className="text-[#64B17C]">
+            <Link to="/login" className="text-[#64B17C]">
               로그인
             </Link>
           </p>
