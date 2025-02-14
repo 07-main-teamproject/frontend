@@ -15,7 +15,6 @@ const LoginForm = () => {
 
   const onSubmit = (data: LoginFormData) => {
     console.log(data);
-    // 로그인 aip 여기에 추가
   };
 
   return (
