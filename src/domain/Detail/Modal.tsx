@@ -21,7 +21,7 @@ export default function Modal({
   //if (!isModalOpen) return null; // 모달이 닫혀 있으면 렌더링하지 않음
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center">
+    <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg w-96">
         <div className="flex justify-between items-center">
           <h2 className="text-lg font-semibold">음식 검색</h2>
@@ -32,7 +32,6 @@ export default function Modal({
         <p>어떤 식단을 추가할까요?</p>
         <input
           type="text"
-          placeholder="음식 이름 입력..."
           className="mt-4 p-2 border w-full rounded"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
