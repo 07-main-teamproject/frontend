@@ -28,26 +28,27 @@ export const profileAtom = atom<ProfileData>({
 });
 
 export const loadingAtom = atom<boolean>(true);
-
 export const errorAtom = atom<string | null>(null);
-
 export const isEditingAtom = atom<boolean>(false);
 
 export const fetchProfileAtom = atom(null, async (_get, set) => {
   set(loadingAtom, true);
-  set(errorAtom, null); // 기존 오류 초기화
+  set(errorAtom, null);
 
   try {
     const res = await axios.get<ProfileData>(API_BASE_URL);
-    set(profileAtom, res.data);
-  } catch (error) {
-    let errorMessage = '프로필을 불러오는 중 오류가 발생했습니다.'; // 기본 오류 메시지
 
+    set(profileAtom, {
+      ...res.data,
+      profileImage: res.data.profileImage || '', // 기본값 처리
+    });
+  } catch (error) {
+    console.error('프로필 불러오기 실패:', error);
+
+    let errorMessage = '프로필을 불러오는 중 오류가 발생했습니다.';
     if (axios.isAxiosError(error)) {
-      // Axios 오류인 경우, 서버에서 제공한 메시지를 우선 사용
       errorMessage = error.response?.data?.message || errorMessage;
     } else if (error instanceof Error) {
-      // 일반적인 JS 오류인 경우
       errorMessage = error.message;
     }
 
@@ -59,15 +60,22 @@ export const fetchProfileAtom = atom(null, async (_get, set) => {
 
 export const saveProfileAtom = atom(null, async (get, set) => {
   set(loadingAtom, true);
-  set(errorAtom, null); // 기존 오류 초기화
+  set(errorAtom, null);
 
   try {
-    await axios.put(API_BASE_URL, get(profileAtom));
-    set(isEditingAtom, false);
-    alert('프로필이 저장되었습니다!');
-  } catch (error) {
-    let errorMessage = '프로필 저장 중 오류가 발생했습니다.';
+    const { profileImage, ...profileDataWithoutImage } = get(profileAtom);
 
+    await axios.put(API_BASE_URL, profileDataWithoutImage);
+
+    setTimeout(() => {
+      set(isEditingAtom, false);
+    }, 500); // UI 부드럽게 전환
+
+    console.log('프로필 저장 완료');
+  } catch (error) {
+    console.error('프로필 저장 실패:', error);
+
+    let errorMessage = '프로필 저장 중 오류가 발생했습니다.';
     if (axios.isAxiosError(error)) {
       errorMessage = error.response?.data?.message || errorMessage;
     } else if (error instanceof Error) {
