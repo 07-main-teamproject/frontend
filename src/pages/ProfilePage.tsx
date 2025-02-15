@@ -6,7 +6,7 @@ import {
   loadingAtom,
   errorAtom,
 } from '../store/profileAtom';
-import axios from 'axios';
+import { UserApi } from '../api/User';
 
 const defaultProfileImage = '';
 
@@ -23,9 +23,7 @@ const ProfilePage = () => {
     const fetchProfile = async () => {
       try {
         setLoading(true);
-        const res = await axios.get('/api/user/profile');
-        const backendProfile = res.data;
-
+        const backendProfile = await UserApi.getProfile();
         setProfile((prev) => ({
           ...prev,
           ...backendProfile,
@@ -39,7 +37,7 @@ const ProfilePage = () => {
       }
     };
     fetchProfile();
-  }, []);
+  }, [setLoading, setProfile, setError]);
 
   const convertFileToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -81,7 +79,11 @@ const ProfilePage = () => {
     const isNumberField = ['age', 'height', 'weight', 'target_weight'].includes(
       name,
     );
-    const newValue = isNumberField ? Math.max(0, Number(value)) : value;
+    const newValue = isNumberField
+      ? value === ''
+        ? null
+        : Math.max(0, Number(value))
+      : value;
 
     setProfile((prev) => ({
       ...prev,
@@ -106,13 +108,14 @@ const ProfilePage = () => {
 
   const handleSaveProfile = async () => {
     try {
-      await axios.put('/api/user/profile', {
-        ...profile,
-        profileImage: undefined, // 로컬 저장
-      });
+      await UserApi.updateProfile({ ...profile, profileImage: undefined });
+
+      if (profile.profileImage) {
+        localStorage.setItem('profileImage', profile.profileImage);
+      }
 
       alert('프로필이 저장되었습니다!');
-      setIsEditing(false); // 수정 모드 비활성화
+      setIsEditing(false);
     } catch (error) {
       console.error('프로필 저장 실패:', error);
       setError('프로필 저장 중 오류가 발생했습니다.');
@@ -121,15 +124,19 @@ const ProfilePage = () => {
 
   if (loading)
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        로딩 중...
-      </div>
+      <>
+        <div className="min-h-screen flex items-center justify-center">
+          로딩 중...
+        </div>
+      </>
     );
   if (error)
     return (
-      <div className="min-h-screen flex items-center justify-center text-red-500">
-        {error}
-      </div>
+      <>
+        <div className="min-h-screen flex items-center justify-center text-red-500">
+          {error}
+        </div>
+      </>
     );
 
   return (
