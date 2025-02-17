@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { Link } from "react-router-dom"; 
-import { Search, User } from "lucide-react";
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
+import { Search, User } from 'lucide-react';
 
 const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
@@ -34,11 +34,8 @@ const Header: React.FC = () => {
               <Link to="/" className="py-1 text-gray-700 text-sm">
                 <li>홈</li>
               </Link>
-              <Link
-                to="/recommendations"
-                className="py-1 text-gray-700 text-sm"
-              >
-                <li>추천식당</li>
+              <Link to="/logout" className="py-1 text-gray-700 text-sm">
+                <li>로그아웃</li>
               </Link>
               <Link to="/profile" className="py-1 text-gray-700 text-sm">
                 <li> 프로필</li>
