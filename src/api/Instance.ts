@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const BASE_URL = ''; // env base url 내용 설정
+const BASE_URL = import.meta.env.VITE_BASE_URL; // env base url 내용 설정
 
 /**
  * 사용법
@@ -32,8 +32,9 @@ export const instance = axios.create({
 // API endpoint
 export const path = {
   USER: '/api/user',
+  FOOD: '/api/external',
   DIET: '/api/diet',
-  EXTERNAL: '/api/external',
+  DIETFOOD: '/api/dietfood',
 };
 
 export const endpoint = {
@@ -41,7 +42,12 @@ export const endpoint = {
   login: path.USER + '/login/',
   logout: path.USER + '/logout/',
   profile: path.USER + '/profile/',
-  calory: path.DIET + '/calculate-calories/',
-  diet: path.DIET + '/diet/',
-  food: path.EXTERNAL + '/food/info/',
+
+  food: path.FOOD + '/info/',
+  dietCreate: path.DIET + '/create/',
+  dietDelete: path.DIET + '/delete/',
+
+  addDietFood: path.DIETFOOD + '/add/',
+  removeDietFood: path.DIETFOOD + '/remove/',
+  updateDietFood: path.DIETFOOD + '/protionsize/',
 };
