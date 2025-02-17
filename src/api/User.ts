@@ -1,4 +1,4 @@
-import { instance, endpoint } from './instance';
+import { instance, endpoint } from './Instance';
 
 export const UserApi = {
   // 프로필 가져오기
