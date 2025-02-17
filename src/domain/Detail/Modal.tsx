@@ -1,31 +1,34 @@
-import { atom, useAtom } from 'jotai';
 import { X } from 'lucide-react';
+import { atom, useAtom } from 'jotai';
 
-// 전역 상태
-const isModalOpenAtom = atom(false);
+// Jotai 상태
 const searchQueryAtom = atom('');
-const foodOptions = ['고구마', '바나나', '두부', '연어', '오트밀'];
 
 export default function Modal({
   addFood,
+  closeModal,
 }: {
   addFood: (foodName: string) => void;
+  closeModal: () => void;
 }) {
-  const [isModalOpen, setIsModalOpen] = useAtom(isModalOpenAtom);
   const [searchQuery, setSearchQuery] = useAtom(searchQueryAtom);
 
+  const foodOptions = ['고구마', '바나나', '두부', '연어', '오트밀'];
   const filteredFoods = foodOptions.filter((food) =>
     food.includes(searchQuery),
   );
-
-  //if (!isModalOpen) return null; // 모달이 닫혀 있으면 렌더링하지 않음
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded-lg shadow-lg w-96">
         <div className="flex justify-between items-center">
           <h2 className="text-lg font-semibold">음식 검색</h2>
-          <button onClick={() => setIsModalOpen(false)}>
+          <button
+            onClick={() => {
+              closeModal();
+              setSearchQuery(''); // 모달 닫을 때 검색어 초기화
+            }}
+          >
             <X size={20} />
           </button>
         </div>
@@ -41,7 +44,11 @@ export default function Modal({
             <button
               key={index}
               className="block w-full text-left p-2 hover:bg-gray-100"
-              onClick={() => addFood(food)}
+              onClick={() => {
+                addFood(food);
+                closeModal();
+                setSearchQuery(''); // 선택 후 검색어 초기화
+              }}
             >
               {food}
             </button>
