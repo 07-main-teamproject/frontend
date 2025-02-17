@@ -5,7 +5,7 @@ import SignUpForm from './pages/Signup';
 import LoginForm from './pages/Login';
 import MainPage from './pages/MainPage';
 import Header from './components/Header';
-import ProfilePage from './pages/ProfilePage';
+import { ProfilePage } from './pages/ProfilePage';
 
 const App: React.FC = () => {
   return (
