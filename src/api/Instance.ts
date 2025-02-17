@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = ""; // env base url 내용 설정
+const BASE_URL = import.meta.env.VITE_BASE_URL; // env base url 내용 설정
 
 /**
  * 사용법
