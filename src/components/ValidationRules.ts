@@ -2,7 +2,7 @@ export const validationRules = {
   email: {
     required: '이메일은 필수입니다',
     pattern: {
-      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+.[A-Z]{2,}$/i,
+      value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
       message: '올바른 이메일 형식이 아닙니다',
     },
   },
@@ -13,7 +13,7 @@ export const validationRules = {
       message: '비밀번호는 최소 8자 이상이어야 합니다',
     },
     pattern: {
-      value: /^(?=.[a-zA-Z])(?=.[0-9])(?=.[!@#$%^&])/,
+      value: /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/,
       message: '비밀번호는 영문, 숫자, 특수문자를 포함해야 합니다',
     },
   },

@@ -1,5 +1,6 @@
 import { useForm } from 'react-hook-form';
 import { validationRules } from '../components/ValidationRules';
+import { SignupApi } from '../Api/Signup';
 import { Link } from 'react-router-dom';
 
 interface FormData {
@@ -15,14 +16,27 @@ const SignUpForm = () => {
     register,
     handleSubmit,
     watch,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<FormData>();
 
-  const onSubmit = (data: FormData) => {
-    console.log(data);
-  };
-
   const passwordValue = watch('password');
+
+  // 회원가입 처리
+  const onSubmit = async (data: FormData) => {
+    try {
+      const response = await SignupApi.signup({
+        email: data.email,
+        password: data.password,
+        nickname: data.nickname,
+      });
+
+      alert('회원가입이 완료되었습니다!');
+      console.log('회원가입 성공:', response);
+    } catch (error) {
+      console.error('회원가입 실패:', error);
+      alert('회원가입에 실패했습니다. 다시 시도해주세요.');
+    }
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-green-50 to-green-100 relative">
@@ -142,9 +156,10 @@ const SignUpForm = () => {
 
           <button
             type="submit"
+            disabled={isSubmitting}
             className="w-full bg-[#64B17C] text-white py-3 rounded-lg text-lg font-semibold transition duration-200 hover:bg-[#569b6e] shadow-md"
           >
-            가입하기
+            {isSubmitting ? '가입 중...' : '가입하기'}
           </button>
         </form>
       </div>
