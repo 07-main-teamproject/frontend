@@ -2,6 +2,8 @@ import { useForm } from 'react-hook-form';
 import { validationRules } from '../components/ValidationRules';
 import { SignupApi } from '../Api/Signup';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAtom } from 'jotai';
+import { authAtom } from '../store/authAtom';
 
 interface FormData {
   email: string;
@@ -13,6 +15,8 @@ interface FormData {
 
 const SignUpForm = () => {
   const navigate = useNavigate();
+  const [, setAuth] = useAtom(authAtom);
+
   const {
     register,
     handleSubmit,
@@ -34,6 +38,8 @@ const SignUpForm = () => {
 
       alert('회원가입이 완료되었습니다!');
       console.log('회원가입 성공:', response);
+      setAuth({ isAuthenticated: true, user: response });
+
       navigate('/login');
     } catch (error) {
       console.error('회원가입 실패:', error);
