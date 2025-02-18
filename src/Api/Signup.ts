@@ -4,6 +4,7 @@ interface SignupData {
   email: string;
   password: string;
   nickname: string;
+  name: string;
 }
 
 export const SignupApi = {
