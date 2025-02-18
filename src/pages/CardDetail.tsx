@@ -1,47 +1,78 @@
+import { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { User, Trash2, Plus, Calendar } from 'lucide-react';
-import { atom, useAtom } from 'jotai';
+import { getDietById, createDiet, deleteDiet } from '../Api/Diet';
 import Modal from '../domain/Detail/Modal';
 import Graph from '../domain/Detail/Graph';
 
-// Jotai 전역 상태
-const mealsAtom = atom({
-  아침: [
-    { name: '현미밥', protein: 10, minerals: 5, vitamins: 7 },
-    { name: '닭가슴살 100g', protein: 25, minerals: 8, vitamins: 5 },
-  ],
-  점심: [{ name: '삶은 계란 2개', protein: 15, minerals: 7, vitamins: 6 }],
-  저녁: [],
-});
-
-const isModalOpenAtom = atom(false);
-const selectedMealAtom = atom<'아침' | '점심' | '저녁'>('아침');
-const selectedDateAtom = atom(new Date().toISOString().split('T')[0]); // 기본값: 오늘 날짜
-
 const CardDetail: React.FC = () => {
-  const [meals, setMeals] = useAtom(mealsAtom);
-  const [isModalOpen, setIsModalOpen] = useAtom(isModalOpenAtom);
-  const [selectedMeal, setSelectedMeal] = useAtom(selectedMealAtom);
-  const [selectedDate, setSelectedDate] = useAtom(selectedDateAtom);
+  const { id } = useParams<{ id: string }>();
+
+  const [diet, setDiet] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [, setSelectedMeal] = useState<'아침' | '점심' | '저녁'>('아침');
+  const [selectedDate, setSelectedDate] = useState(
+    new Date().toISOString().split('T')[0],
+  );
+
+  // 식단 데이터 불러오기
+  useEffect(() => {
+    if (!id) return;
+    const fetchDiet = async () => {
+      try {
+        const data = await getDietById(id);
+        setDiet(data);
+      } catch (error) {
+        console.error('식단 조회 오류:', error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchDiet();
+  }, [id]);
 
   // 음식 추가
-  const addFood = (foodName: string) => {
-    setMeals((prevMeals) => ({
-      ...prevMeals,
-      [selectedMeal]: [
-        ...prevMeals[selectedMeal],
-        { name: foodName, protein: 10, minerals: 5, vitamins: 5 },
+  const addFood = async (foodName: string) => {
+    if (!diet) return;
+
+    const updatedDiet = {
+      ...diet,
+      diet_foods: [
+        ...diet.diet_foods,
+        { food: { name: foodName }, portion_size: 1 },
       ],
-    }));
-    setIsModalOpen(false); // 음식 추가 후 모달 닫기
+    };
+
+    try {
+      await createDiet(updatedDiet);
+      setDiet(updatedDiet); // 상태 업데이트
+    } catch (error) {
+      console.error('음식 추가 오류:', error);
+    }
+
+    setIsModalOpen(false); // 모달 닫기
   };
 
   // 음식 삭제
-  const removeFood = (mealType: '아침' | '점심' | '저녁', index: number) => {
-    setMeals((prevMeals) => ({
-      ...prevMeals,
-      [mealType]: prevMeals[mealType].filter((_, i) => i !== index),
-    }));
+  const removeFood = async (index: number) => {
+    if (!diet) return;
+
+    const updatedDiet = {
+      ...diet,
+      diet_foods: diet.diet_foods.filter((_: any, i: number) => i !== index),
+    };
+
+    try {
+      await createDiet(updatedDiet); // API에 업데이트
+      setDiet(updatedDiet);
+    } catch (error) {
+      console.error('음식 삭제 오류:', error);
+    }
   };
+
+  if (isLoading) return <p>불러오는 중...</p>;
 
   return (
     <div className="flex flex-col items-center p-6 bg-green-50 min-h-screen">
@@ -50,7 +81,9 @@ const CardDetail: React.FC = () => {
         <div className="flex items-center gap-4">
           <User />
           <div>
-            <h2 className="text-lg font-semibold">사용자 이름</h2>
+            <h2 className="text-lg font-semibold">
+              {diet?.user?.name || '사용자'}
+            </h2>
             <p className="text-sm text-gray-500">목표 칼로리: 2000 kcal</p>
           </div>
         </div>
@@ -67,7 +100,7 @@ const CardDetail: React.FC = () => {
         </div>
       </div>
 
-      {/* 식단 리스트  */}
+      {/* 식단 리스트 */}
       <div className="mt-6 flex flex-col flex-wrap items-center gap-6 w-full max-w-2xl">
         {(['아침', '점심', '저녁'] as const).map((mealType) => (
           <div
@@ -75,15 +108,15 @@ const CardDetail: React.FC = () => {
             className="w-full p-6 bg-white rounded-lg shadow-md"
           >
             <h3 className="text-lg font-semibold">{mealType} 식단</h3>
-            {meals[mealType].length > 0 ? (
-              meals[mealType].map((food, index) => (
+            {diet?.diet_foods.length > 0 ? (
+              diet.diet_foods.map((food: any, index: number) => (
                 <div
                   key={index}
                   className="flex justify-between items-center border-b py-2"
                 >
-                  <span>{food.name}</span>
+                  <span>{food.food.name}</span>
                   <button
-                    onClick={() => removeFood(mealType, index)}
+                    onClick={() => removeFood(index)}
                     className="text-red-500"
                   >
                     <Trash2 size={20} />
@@ -114,9 +147,20 @@ const CardDetail: React.FC = () => {
       {/* 그래프 */}
       <Graph />
 
-      {/* 저장 버튼 */}
-      <button className="mt-6 bg-[#64B17C] text-white px-6 py-2 rounded-full hover:bg-green-700">
-        저장
+      {/* 삭제 버튼 */}
+      <button
+        onClick={async () => {
+          if (!id) return;
+          try {
+            await deleteDiet(id);
+            alert('식단이 삭제되었습니다.');
+          } catch (error) {
+            console.error('식단 삭제 오류:', error);
+          }
+        }}
+        className="mt-6 bg-red-500 text-white px-6 py-2 rounded-full hover:bg-red-700"
+      >
+        삭제
       </button>
     </div>
   );

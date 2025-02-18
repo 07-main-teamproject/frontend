@@ -25,8 +25,8 @@ export const instance = axios.create({
   headers: {
     Accept: 'application/json', // 프론트에서 받을 데이터 타입
     'Content-Type': 'application/json', // 프론트에서 보내는 데이터 타입
-    withCredentials: true, // 쿠키나 인증 정보를 함께 보냄
   },
+  withCredentials: true, // 쿠키나 인증 정보를 함께 보냄
 });
 
 // API endpoint

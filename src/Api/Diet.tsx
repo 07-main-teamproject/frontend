@@ -1,9 +1,11 @@
-import { instance, ENDPOINT } from './instance';
-
+import { instance, ENDPOINT } from './Instance';
+import type { AllDietsResponse } from './types/getAllDiets';
 // 전체 식단 목록 조회
-export const getAllDiets = async () => {
+export const getAllDiets = async (): Promise<AllDietsResponse[]> => {
   try {
-    const response = await instance.get(ENDPOINT.dietDefault);
+    const response = await instance.get<AllDietsResponse[]>(
+      ENDPOINT.dietDefault,
+    );
     return response.data;
   } catch (error) {
     console.error('식단 목록 조회 오류:', error);

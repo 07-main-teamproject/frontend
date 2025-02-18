@@ -1,4 +1,4 @@
-import { instance, ENDPOINT } from './instance';
+import { instance, ENDPOINT } from './Instance';
 
 // 특정 식단에 음식 추가
 export const addFoodToDiet = async (
