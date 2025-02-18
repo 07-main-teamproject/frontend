@@ -1,7 +1,7 @@
 import { useForm } from 'react-hook-form';
 import { validationRules } from '../components/ValidationRules';
 import { SignupApi } from '../Api/Signup';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 interface FormData {
   email: string;
@@ -12,6 +12,7 @@ interface FormData {
 }
 
 const SignUpForm = () => {
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -33,6 +34,7 @@ const SignUpForm = () => {
 
       alert('회원가입이 완료되었습니다!');
       console.log('회원가입 성공:', response);
+      navigate('/login');
     } catch (error) {
       console.error('회원가입 실패:', error);
       alert('회원가입에 실패했습니다. 다시 시도해주세요.');
