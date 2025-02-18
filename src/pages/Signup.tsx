@@ -28,6 +28,7 @@ const SignUpForm = () => {
         email: data.email,
         password: data.password,
         nickname: data.nickname,
+        name: data.username,
       });
 
       alert('회원가입이 완료되었습니다!');
