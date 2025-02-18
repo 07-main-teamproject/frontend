@@ -1,20 +1,46 @@
 import { useForm } from 'react-hook-form';
 import { validationRules } from '../components/ValidationRules';
-import { Link } from 'react-router-dom';
+import { LoginApi } from '../Api/Login';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAtom } from 'jotai';
+import { authAtom } from '../store/authAtom';
+import { useState } from 'react';
 
 interface LoginFormData {
   email: string;
   password: string;
 }
+
 const LoginForm = () => {
+  const navigate = useNavigate(); // 로그인 성공 시 이동
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [, setAuth] = useAtom(authAtom); // Jotai 전역 상태 관리
+
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm<LoginFormData>();
 
-  const onSubmit = (data: LoginFormData) => {
-    console.log(data);
+  const onSubmit = async (data: LoginFormData) => {
+    try {
+      const response = await LoginApi.login({
+        email: data.email,
+        password: data.password,
+      });
+
+      alert('로그인 성공!');
+      console.log('로그인 성공:', response);
+
+      // Jotai 상태 업데이트
+      setAuth({ isAuthenticated: true, user: response });
+
+      // 로그인 후 메인 페이지 이동
+      navigate('/');
+    } catch (error) {
+      console.error('로그인 실패:', error);
+      setErrorMessage('이메일 또는 비밀번호가 올바르지 않습니다.');
+    }
   };
 
   return (
@@ -23,6 +49,10 @@ const LoginForm = () => {
         <h2 className="text-2xl font-bold text-center text-green-700 mb-6">
           로그인
         </h2>
+
+        {errorMessage && (
+          <p className="text-red-500 text-center mb-4">{errorMessage}</p>
+        )}
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div>
@@ -37,9 +67,7 @@ const LoginForm = () => {
               {...register('email', validationRules.email)}
             />
             {errors.email && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.email.message}
-              </p>
+              <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
             )}
           </div>
 
@@ -55,17 +83,16 @@ const LoginForm = () => {
               {...register('password', validationRules.password)}
             />
             {errors.password && (
-              <p className="text-red-500 text-sm mt-1">
-                {errors.password.message}
-              </p>
+              <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
             )}
           </div>
 
           <button
             type="submit"
+            disabled={isSubmitting}
             className="w-full bg-[#64B17C] text-white py-2 rounded-lg font-semibold hover:opacity-90 transition duration-300"
           >
-            로그인
+            {isSubmitting ? '로그인 중...' : '로그인'}
           </button>
         </form>
 
@@ -73,7 +100,7 @@ const LoginForm = () => {
           <button className="w-14 h-14 flex items-center justify-center rounded-full shadow-md hover:shadow-lg active:scale-95 transition">
             <img
               src="/images/google-icon.png"
-              alt="Kakao Login"
+              alt="Google Login"
               className="w-14 h-14"
             />
           </button>
@@ -97,10 +124,7 @@ const LoginForm = () => {
 
         <p className="text-center text-gray-600 mt-4">
           아직 회원이 아니신가요?{' '}
-          <Link
-            to="/signup"
-            className="text-[#64B17C] font-medium hover:underline"
-          >
+          <Link to="/signup" className="text-[#64B17C] font-medium hover:underline">
             회원가입
           </Link>
         </p>
