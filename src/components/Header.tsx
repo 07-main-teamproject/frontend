@@ -34,8 +34,8 @@ const Header: React.FC = () => {
               <Link to="/" className="py-1 text-gray-700 text-sm">
                 <li>홈</li>
               </Link>
-              <Link to="/logout" className="py-1 text-gray-700 text-sm">
-                <li>로그아웃</li>
+              <Link to="/login" className="py-1 text-gray-700 text-sm">
+                <li>로그인</li>
               </Link>
               <Link to="/profile" className="py-1 text-gray-700 text-sm">
                 <li> 프로필</li>
