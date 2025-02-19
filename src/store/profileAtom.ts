@@ -2,6 +2,7 @@ import { atom } from 'jotai';
 import axios from 'axios';
 
 interface ProfileData {
+  name: string;
   profileImage: string;
   nickname: string;
   gender: '남성' | '여성';
@@ -13,9 +14,10 @@ interface ProfileData {
   foodPreferences: string[];
 }
 
-const API_BASE_URL = '/api/user/profile/';
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api/user/profile/';
 
 export const profileAtom = atom<ProfileData>({
+  name: '',
   profileImage: '',
   nickname: '',
   gender: '남성',
@@ -33,49 +35,49 @@ export const errorAtom = atom<string | null>(null);
 
 export const isEditingAtom = atom<boolean>(false);
 
-export const fetchProfileAtom = atom(null, async (_get, set) => {
+const handleApiRequest = async (
+  callback: () => Promise<void>,
+  set: (atom: any, value: any) => void,
+) => {
   set(loadingAtom, true);
-  set(errorAtom, null); // 기존 오류 초기화
-
+  set(errorAtom, null);
   try {
-    const res = await axios.get<ProfileData>(API_BASE_URL);
-    set(profileAtom, res.data);
+    await callback();
   } catch (error) {
-    let errorMessage = '프로필을 불러오는 중 오류가 발생했습니다.'; // 기본 오류 메시지
-
+    let errorMessage = '오류가 발생했습니다.';
     if (axios.isAxiosError(error)) {
-      // Axios 오류인 경우, 서버에서 제공한 메시지를 우선 사용
       errorMessage = error.response?.data?.message || errorMessage;
     } else if (error instanceof Error) {
-      // 일반적인 JS 오류인 경우
       errorMessage = error.message;
     }
-
+    console.error('API Error:', error);
     set(errorAtom, errorMessage);
   } finally {
     set(loadingAtom, false);
   }
+};
+
+export const fetchProfileAtom = atom(null, async (_get, set) => {
+  await handleApiRequest(async () => {
+    const { data } = await axios.get<ProfileData>(API_BASE_URL);
+
+    if (!data || !data.name) {
+      throw new Error('서버에서 올바른 프로필 데이터를 반환하지 않았습니다.');
+    }
+
+    set(profileAtom, data);
+  }, set);
 });
 
 export const saveProfileAtom = atom(null, async (get, set) => {
-  set(loadingAtom, true);
-  set(errorAtom, null); // 기존 오류 초기화
+  await handleApiRequest(async () => {
+    const { status } = await axios.put(API_BASE_URL, get(profileAtom));
 
-  try {
-    await axios.put(API_BASE_URL, get(profileAtom));
-    set(isEditingAtom, false);
-    alert('프로필이 저장되었습니다!');
-  } catch (error) {
-    let errorMessage = '프로필 저장 중 오류가 발생했습니다.';
-
-    if (axios.isAxiosError(error)) {
-      errorMessage = error.response?.data?.message || errorMessage;
-    } else if (error instanceof Error) {
-      errorMessage = error.message;
+    if (status === 200) {
+      set(isEditingAtom, false);
+      alert('프로필이 저장되었습니다!');
+    } else {
+      throw new Error('서버에서 예상치 못한 응답을 반환했습니다.');
     }
-
-    set(errorAtom, errorMessage);
-  } finally {
-    set(loadingAtom, false);
-  }
+  }, set);
 });

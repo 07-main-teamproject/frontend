@@ -7,9 +7,26 @@ export const UserApi = {
     return response.data;
   },
 
+  // 프로필 생성
+  createProfile: async (profileData: any) => {
+    const response = await instance.post(ENDPOINT.profile, profileData);
+    return response.data;
+  },
+
   // 프로필 업데이트
   updateProfile: async (profileData: any) => {
     const response = await instance.put(ENDPOINT.profile, profileData);
+    return response.data;
+  },
+
+  // 프로필 삭제
+  deleteProfile: async () => {
+    const response = await instance.delete(ENDPOINT.profile);
+    return response.data;
+  },
+
+  getUserInfo: async () => {
+    const response = await instance.get(ENDPOINT.userinfo);
     return response.data;
   },
 };
