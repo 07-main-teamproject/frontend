@@ -149,7 +149,7 @@ export const ProfilePage = () => {
     setProfile((prev) => ({
       ...prev,
       [category]: checked
-        ? [...prev[category], value]
+        ? [...(prev?.[category] || []), value]
         : prev[category].filter((item) => item !== value),
     }));
   };
