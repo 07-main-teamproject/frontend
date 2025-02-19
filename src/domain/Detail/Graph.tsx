@@ -1,54 +1,34 @@
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
 import { Pie } from 'react-chartjs-2';
-import { useAtom } from 'jotai';
-import { foodsAtom } from '../Detail/Atoms';
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
-interface Food {
-  name: string;
+interface NutritionData {
+  calories: number;
+  carbs: number;
   protein: number;
-  minerals: number;
-  vitamins: number;
+  fat: number;
 }
 
-export default function Graph() {
-  const [foods] = useAtom<Food[]>(foodsAtom);
+const Graph: React.FC<{ data?: NutritionData }> = ({ data }) => {
+  const defaultData: NutritionData = {
+    calories: 0,
+    carbs: 1,
+    protein: 1,
+    fat: 1,
+  };
+  const safeData = data || defaultData;
 
-  // 하루 영양소 합산 계산 (타입 명확하게 설정)
-  const totalNutrients = foods.reduce<{
-    protein: number;
-    minerals: number;
-    vitamins: number;
-  }>(
-    (acc, food) => {
-      acc.protein += food.protein;
-      acc.minerals += food.minerals;
-      acc.vitamins += food.vitamins;
-      return acc;
-    },
-    { protein: 0, minerals: 0, vitamins: 0 },
-  );
-
-  const isDataEmpty =
-    totalNutrients.protein === 0 &&
-    totalNutrients.minerals === 0 &&
-    totalNutrients.vitamins === 0;
+  console.log('Graph Data:', safeData);
 
   const chartData = {
-    labels: ['단백질', '미네랄', '비타민'],
+    labels: ['탄수화물', '단백질', '지방'],
     datasets: [
       {
-        label: '하루 영양소 비율',
-        data: isDataEmpty
-          ? [1, 1, 1]
-          : [
-              totalNutrients.protein,
-              totalNutrients.minerals,
-              totalNutrients.vitamins,
-            ],
-        backgroundColor: ['#64B17C', '#FFBB28', '#FF8042'],
-        borderColor: ['#4D8D64', '#D69F00', '#D66800'],
+        label: '영양 구성',
+        data: [safeData.carbs, safeData.protein, safeData.fat],
+        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],
+        borderColor: ['#D9534F', '#007BB5', '#E6B800'],
         borderWidth: 1,
       },
     ],
@@ -57,10 +37,6 @@ export default function Graph() {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
-    animation: {
-      animateScale: true,
-      animateRotate: true,
-    },
     plugins: {
       legend: {
         position: 'top' as const,
@@ -69,15 +45,13 @@ export default function Graph() {
   };
 
   return (
-    <div className="w-full max-w-2xl bg-white p-6 rounded-lg shadow-md mt-6">
-      <h3 className="text-lg font-semibold mb-4">하루 영양소 비율</h3>
+    <div className="w-full max-w-lg bg-white rounded-lg shadow-md p-4 mt-6">
+      <h3 className="text-lg font-semibold text-center">영양 구성</h3>
       <div className="relative h-64">
-        {isDataEmpty ? (
-          <p className="text-center text-gray-500">데이터가 없습니다.</p>
-        ) : (
-          <Pie data={chartData} options={options} />
-        )}
+        <Pie data={chartData} options={options} />
       </div>
     </div>
   );
-}
+};
+
+export default Graph;

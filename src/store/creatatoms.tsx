@@ -2,7 +2,7 @@ import { atom } from 'jotai';
 import { getAllDiets, createDiet } from '../Api/Diet';
 
 // 전체 식단 목록을 저장하는 Atom
-export const dietListAtom = atom<{ id: Number; name: string; date: string }[]>(
+export const dietListAtom = atom<{ id: number; name: string; date: string }[]>(
   [],
 );
 
