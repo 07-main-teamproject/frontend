@@ -42,6 +42,7 @@ export const ENDPOINT = {
   login: PATH.USER + '/login/',
   logout: PATH.USER + '/logout/',
   profile: PATH.USER + '/profile/',
+  userinfo: PATH.USER + '/me/',
 
   food: PATH.FOOD + '/info/',
   dietDefault: PATH.DIET,
