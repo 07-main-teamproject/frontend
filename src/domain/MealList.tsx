@@ -50,7 +50,7 @@ const MealList: React.FC = () => {
         {diets.length > 0 ? (
           diets.map((diet) => (
             <MealCard
-              key={diet.id}
+              key={diet.id.toString()}
               id={diet.id}
               title={diet.name}
               description={diet.date}

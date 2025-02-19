@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 
 interface MealCardProps {
-  id: string;
+  id: number;
   image?: string;
   title: string;
   description: string;
@@ -15,13 +15,17 @@ const MealCard: React.FC<MealCardProps> = ({
   description,
   buttonText = '자세히 보기',
 }) => {
+  const imageUrl = image
+    ? `${import.meta.env.BASE_URL}assets/${image}`
+    : `${import.meta.env.BASE_URL}assets/image.jpg`;
+
   return (
     <div className="bg-white shadow-lg rounded-xl p-4 w-64">
       {/* 이미지 */}
       <div className="w-full h-40 bg-gray-200 rounded-lg flex items-center justify-center">
         {image ? (
           <img
-            src={image}
+            src={imageUrl}
             alt={title}
             className="w-full h-full object-cover rounded-lg"
           />

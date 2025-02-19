@@ -2,12 +2,12 @@ import { atom } from 'jotai';
 import { getAllDiets, createDiet } from '../Api/Diet';
 
 // 전체 식단 목록을 저장하는 Atom
-export const dietListAtom = atom<{ id: string; name: string; date: string }[]>(
+export const dietListAtom = atom<{ id: Number; name: string; date: string }[]>(
   [],
 );
 
 // API 호출하여 식단 목록 업데이트
-export const fetchDietsAtom = atom(null, async (get, set) => {
+export const fetchDietsAtom = atom(null, async (_get, set) => {
   try {
     const data = await getAllDiets();
     set(dietListAtom, data);
