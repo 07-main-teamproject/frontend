@@ -33,6 +33,19 @@ const CardDetail: React.FC = () => {
     fetchDiet();
   }, [id]);
 
+  // 영양소 데이터 계산
+  const calculateNutrition = (foods: any[]) => {
+    return foods.reduce(
+      (acc, food) => ({
+        calories: acc.calories + (food.food.calories || 0),
+        carbs: acc.carbs + (food.food.carbs || 0),
+        protein: acc.protein + (food.food.protein || 0),
+        fat: acc.fat + (food.food.fat || 0),
+      }),
+      { calories: 0, carbs: 0, protein: 0, fat: 0 },
+    );
+  };
+
   // 음식 추가
   const addFood = async (foodName: string) => {
     if (!diet) return;
@@ -41,7 +54,16 @@ const CardDetail: React.FC = () => {
       ...diet,
       diet_foods: [
         ...diet.diet_foods,
-        { food: { name: foodName }, portion_size: 1 },
+        {
+          food: {
+            name: foodName,
+            calories: 100,
+            carbs: 10,
+            protein: 5,
+            fat: 3,
+          },
+          portion_size: 1,
+        },
       ],
     };
 
@@ -65,7 +87,7 @@ const CardDetail: React.FC = () => {
     };
 
     try {
-      await createDiet(updatedDiet); // API에 업데이트
+      await createDiet(updatedDiet);
       setDiet(updatedDiet);
     } catch (error) {
       console.error('음식 삭제 오류:', error);
@@ -73,6 +95,8 @@ const CardDetail: React.FC = () => {
   };
 
   if (isLoading) return <p>불러오는 중...</p>;
+
+  const nutritionData = diet ? calculateNutrition(diet.diet_foods) : null;
 
   return (
     <div className="flex flex-col items-center p-6 bg-green-50 min-h-screen">
@@ -145,7 +169,7 @@ const CardDetail: React.FC = () => {
       )}
 
       {/* 그래프 */}
-      <Graph />
+      {nutritionData && <Graph data={nutritionData} />}
 
       {/* 삭제 버튼 */}
       <button

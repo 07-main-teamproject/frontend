@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useAtom } from 'jotai';
 import MealCard from '../components/MealCard';
-import { dietListAtom, fetchDietsAtom, addDietAtom } from '../store/creatatoms';
+import { dietListAtom, fetchDietsAtom, addDietAtom } from '../store/creatAtoms';
 
 const MealList: React.FC = () => {
   const [diets] = useAtom(dietListAtom); // 전역 상태에서 식단 목록 가져오기
@@ -40,7 +40,7 @@ const MealList: React.FC = () => {
         />
         <button
           onClick={handleAddDiet}
-          className="mt-2 px-4 py-2 bg-green-500 text-white rounded-lg"
+          className="mt-2 px-4 py-2 bg-[#64b17c] text-white rounded-lg"
         >
           식단 추가
         </button>

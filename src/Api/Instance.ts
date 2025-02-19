@@ -33,8 +33,8 @@ export const instance = axios.create({
 instance.interceptors.request.use((config) => {
   const strAccessToken = localStorage.getItem(localStorageKeys.access_token);
   if (strAccessToken) {
-    const accessToken = JSON.parse(strAccessToken)
-    config.headers.Authorization = `Bearer ${accessToken}`; 
+    const accessToken = JSON.parse(strAccessToken);
+    config.headers.Authorization = `Bearer ${accessToken}`;
   }
   return config;
 });
@@ -48,7 +48,6 @@ instance.interceptors.request.use((config) => {
 //         const strAccessToken = JSON.stringify(response.data)
 //         localStorage.removeItem(localStorageKeys.accesstoken)
 //         localStorage.setItem(localStorageKeys.accesstoken, strAccessToken)
-
 
 //         // 새로운 토큰으로 수정
 //         error.config.headers.accessToken = response.newAccessToken; // @수정: response 내에 accessToken 내용으로 수정

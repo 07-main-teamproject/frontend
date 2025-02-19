@@ -7,8 +7,6 @@ import MainPage from './pages/MainPage';
 import Header from './components/Header';
 import { ProfilePage } from './pages/ProfilePage';
 
-import MealCard from './components/MealCard';
-
 const App: React.FC = () => {
   return (
     <Router>
