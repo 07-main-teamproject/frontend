@@ -11,7 +11,7 @@ interface LoginResponse {
   refreshtoken: string;
 }
 
-const localStorageKeys = {
+export const localStorageKeys = {
   accesstoken: 'accesstoken',
   refreshtoken: 'refreshtoken',
 };
