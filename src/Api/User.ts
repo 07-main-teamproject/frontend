@@ -1,4 +1,4 @@
-import { instance, ENDPOINT } from './Instance'
+import { instance, ENDPOINT } from './Instance';
 
 export const UserApi = {
   // 프로필 가져오기
@@ -22,6 +22,11 @@ export const UserApi = {
   // 프로필 삭제
   deleteProfile: async () => {
     const response = await instance.delete(ENDPOINT.profile);
+    return response.data;
+  },
+
+  getUserInfo: async () => {
+    const response = await instance.get(ENDPOINT.userinfo);
     return response.data;
   },
 };

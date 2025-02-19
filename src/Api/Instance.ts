@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { localStorageKeys } from './Login';
 
 const BASE_URL = import.meta.env.VITE_BASE_URL; // env base url 내용 설정
 
@@ -29,6 +30,36 @@ export const instance = axios.create({
   withCredentials: true, // 쿠키나 인증 정보를 함께 보냄
 });
 
+instance.interceptors.request.use((config) => {
+  const strAccessToken = localStorage.getItem(localStorageKeys.access_token);
+  if (strAccessToken) {
+    const accessToken = JSON.parse(strAccessToken)
+    config.headers.Authorization = `Bearer ${accessToken}`; 
+  }
+  return config;
+});
+
+// instance.interceptors.response.use(
+//   (res) => res,
+//   async (error) => {
+//     if (error.response.status === 401 && error.config) {
+//       const response = await getAccessTokenWithRefreshToken(); // @수정: refresh token을 통해 accessToken을 가져오는 API
+//       if (response) {
+//         const strAccessToken = JSON.stringify(response.data)
+//         localStorage.removeItem(localStorageKeys.accesstoken)
+//         localStorage.setItem(localStorageKeys.accesstoken, strAccessToken)
+
+
+//         // 새로운 토큰으로 수정
+//         error.config.headers.accessToken = response.newAccessToken; // @수정: response 내에 accessToken 내용으로 수정
+//         // 원래 요청을 다시 보내는 로직
+//         const originalResponse = await axios.request(error.config);
+//         return originalResponse; // 원래 api 요청의 response 반환
+//       }
+//     }
+//   },
+// );
+
 // API endpoint
 export const PATH = {
   USER: '/api/user',
@@ -42,6 +73,7 @@ export const ENDPOINT = {
   login: PATH.USER + '/login/',
   logout: PATH.USER + '/logout/',
   profile: PATH.USER + '/profile/',
+  userinfo: PATH.USER + '/me/',
 
   food: PATH.FOOD + '/info/',
   dietDefault: PATH.DIET,
