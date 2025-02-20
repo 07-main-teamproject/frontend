@@ -48,7 +48,7 @@ const SignUpForm = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-green-50 to-green-100 relative">
+    <div className="min-h-screen bg-gradient-to-b from-[#A7E0AE] to-[#64B17C] flex items-center justify-center p-12">
       <div className="max-w-md w-full bg-white p-8 rounded-xl shadow-xl border border-green-200">
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
           건강한 회원가입 🍀
