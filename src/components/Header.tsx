@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Search, User } from 'lucide-react';
 import { useAtom } from 'jotai';
 import { authAtom } from '../store/authAtom';
-import { LoginApi } from '../Api/Login';
+import { localStorageKeys, LoginApi } from '../Api/Login';
 
 const Header: React.FC = () => {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
@@ -33,6 +33,8 @@ const Header: React.FC = () => {
   const handleLogout = async () => {
     try {
       await LoginApi.logout();
+      localStorage.removeItem(localStorageKeys.access_token);
+      localStorage.removeItem(localStorageKeys.refresh_token);
       setAuth({ isAuthenticated: false, user: null });
       alert('로그아웃 성공'); // ✅ 메시지 수정
       navigate('/login');
