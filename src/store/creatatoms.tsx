@@ -10,6 +10,7 @@ export const dietListAtom = atom<{ id: number; name: string; date: string }[]>(
 export const fetchDietsAtom = atom(null, async (_get, set) => {
   try {
     const data = await getAllDiets();
+    console.log(data);
     set(dietListAtom, data);
   } catch (error) {
     console.error('식단 목록 불러오기 실패:', error);

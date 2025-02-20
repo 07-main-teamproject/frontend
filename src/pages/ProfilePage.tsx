@@ -206,7 +206,7 @@ export const ProfilePage = () => {
             <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-2 border-[#64B17C] flex items-center justify-center overflow-hidden">
               {profile?.profileImage ? (
                 <img
-                  src={'http://13.124.215.58/media/' + profile.profileImage}
+                  src={profile.profileImage}
                   alt="프로필"
                   className="w-full h-full object-cover"
                 />

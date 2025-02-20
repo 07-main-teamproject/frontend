@@ -1,5 +1,15 @@
 import { instance, ENDPOINT } from './Instance';
 
+// interface addFood = {
+
+// }
+
+// {
+//   "external_ids": ["5025125000112"],     -> 여러 개 가능
+//   "portion_size":  200 ,
+//   "merge_quantity": true     -> 음식이 이미 존재하면 양만 수정 (true면 기존 양에 더함, false면 덮어씌움)
+// }
+
 // 특정 식단에 음식 추가
 export const addFoodToDiet = async (
   dietId: string,
