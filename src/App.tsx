@@ -6,6 +6,7 @@ import LoginForm from './pages/Login';
 import MainPage from './pages/MainPage';
 import Header from './components/Header';
 import { ProfilePage } from './pages/ProfilePage';
+import CardDetail from './pages/CardDetail';
 
 const App: React.FC = () => {
   return (
@@ -16,7 +17,7 @@ const App: React.FC = () => {
       <Routes>
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/" element={<MainPage />} />
-
+        <Route path="/CardDetail/:id" element={<CardDetail />} />
         <Route path="/signup" element={<SignUpForm />} />
         <Route path="/login" element={<LoginForm />} />
       </Routes>

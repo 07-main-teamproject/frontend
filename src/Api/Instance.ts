@@ -62,7 +62,7 @@ instance.interceptors.request.use((config) => {
 // API endpoint
 export const PATH = {
   USER: '/api/user',
-  FOOD: '/api/external',
+  FOOD: '/api/food',
   DIET: '/api/diet',
   DIET_FOOD: '/api/dietfood',
 };

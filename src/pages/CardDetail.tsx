@@ -1,12 +1,18 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { User, Trash2, Plus, Calendar } from 'lucide-react';
-import { getDietById, createDiet, deleteDiet } from '../Api/Diet';
+import { getDietById, getDietByDate, deleteDiet } from '../Api/Diet';
+import {
+  addFoodToDiet,
+  removeFoodFromDiet,
+  updateFoodPortion,
+} from '../Api/DietFood';
 import Modal from '../domain/Detail/Modal';
 import Graph from '../domain/Detail/Graph';
 
 const CardDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
 
   const [diet, setDiet] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -18,10 +24,15 @@ const CardDetail: React.FC = () => {
 
   // 식단 데이터 불러오기
   useEffect(() => {
-    if (!id) return;
     const fetchDiet = async () => {
+      setIsLoading(true);
       try {
-        const data = await getDietById(id);
+        let data;
+        if (id) {
+          data = await getDietById(id);
+        } else {
+          data = await getDietByDate(selectedDate);
+        }
         setDiet(data);
       } catch (error) {
         console.error('식단 조회 오류:', error);
@@ -31,7 +42,7 @@ const CardDetail: React.FC = () => {
     };
 
     fetchDiet();
-  }, [id]);
+  }, [id, selectedDate]);
 
   // 영양소 데이터 계산
   const calculateNutrition = (foods: any[]) => {
@@ -48,49 +59,52 @@ const CardDetail: React.FC = () => {
 
   // 음식 추가
   const addFood = async (foodName: string) => {
-    if (!diet) return;
-
-    const updatedDiet = {
-      ...diet,
-      diet_foods: [
-        ...diet.diet_foods,
-        {
-          food: {
-            name: foodName,
-            calories: 100,
-            carbs: 10,
-            protein: 5,
-            fat: 3,
-          },
-          portion_size: 1,
-        },
-      ],
-    };
+    if (!diet || !id) return;
 
     try {
-      await createDiet(updatedDiet);
-      setDiet(updatedDiet); // 상태 업데이트
+      const addedFood = await addFoodToDiet(id, { name: foodName, amount: 1 });
+      setDiet((prevDiet: any) => ({
+        ...prevDiet,
+        diet_foods: [...prevDiet.diet_foods, addedFood],
+      }));
     } catch (error) {
       console.error('음식 추가 오류:', error);
     }
 
-    setIsModalOpen(false); // 모달 닫기
+    setIsModalOpen(false);
   };
 
   // 음식 삭제
-  const removeFood = async (index: number) => {
-    if (!diet) return;
-
-    const updatedDiet = {
-      ...diet,
-      diet_foods: diet.diet_foods.filter((_: any, i: number) => i !== index),
-    };
+  const removeFood = async (foodId: string) => {
+    if (!diet || !id) return;
 
     try {
-      await createDiet(updatedDiet);
-      setDiet(updatedDiet);
+      await removeFoodFromDiet(id, foodId);
+      setDiet((prevDiet: any) => ({
+        ...prevDiet,
+        diet_foods: prevDiet.diet_foods.filter(
+          (food: any) => food.food.id !== foodId,
+        ),
+      }));
     } catch (error) {
       console.error('음식 삭제 오류:', error);
+    }
+  };
+
+  // 음식 양 수정
+  const updateFoodAmount = async (foodId: string, newAmount: number) => {
+    if (!diet || !id) return;
+
+    try {
+      await updateFoodPortion(id, foodId, newAmount);
+      setDiet((prevDiet: any) => ({
+        ...prevDiet,
+        diet_foods: prevDiet.diet_foods.map((food: any) =>
+          food.food.id === foodId ? { ...food, portion_size: newAmount } : food,
+        ),
+      }));
+    } catch (error) {
+      console.error('음식 양 수정 오류:', error);
     }
   };
 
@@ -133,18 +147,29 @@ const CardDetail: React.FC = () => {
           >
             <h3 className="text-lg font-semibold">{mealType} 식단</h3>
             {diet?.diet_foods.length > 0 ? (
-              diet.diet_foods.map((food: any, index: number) => (
+              diet.diet_foods.map((food: any) => (
                 <div
-                  key={index}
+                  key={food.food.id}
                   className="flex justify-between items-center border-b py-2"
                 >
                   <span>{food.food.name}</span>
-                  <button
-                    onClick={() => removeFood(index)}
-                    className="text-red-500"
-                  >
-                    <Trash2 size={20} />
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="number"
+                      min="1"
+                      value={food.portion_size}
+                      onChange={(e) =>
+                        updateFoodAmount(food.food.id, Number(e.target.value))
+                      }
+                      className="w-16 p-1 border rounded-lg text-center"
+                    />
+                    <button
+                      onClick={() => removeFood(food.food.id)}
+                      className="text-red-500"
+                    >
+                      <Trash2 size={20} />
+                    </button>
+                  </div>
                 </div>
               ))
             ) : (
@@ -178,6 +203,7 @@ const CardDetail: React.FC = () => {
           try {
             await deleteDiet(id);
             alert('식단이 삭제되었습니다.');
+            navigate('/'); // ✅ 삭제 후 홈으로 이동
           } catch (error) {
             console.error('식단 삭제 오류:', error);
           }

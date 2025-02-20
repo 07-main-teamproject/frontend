@@ -23,15 +23,11 @@ const MealCard: React.FC<MealCardProps> = ({
     <div className="bg-white shadow-lg rounded-xl p-4 w-64">
       {/* 이미지 */}
       <div className="w-full h-40 bg-gray-200 rounded-lg flex items-center justify-center">
-        {image ? (
-          <img
-            src={imageUrl}
-            alt={title}
-            className="w-full h-full object-cover rounded-lg"
-          />
-        ) : (
-          <span className="text-gray-500">이미지 없음</span>
-        )}
+        <img
+          src={imageUrl}
+          alt={title}
+          className="w-full h-full object-cover rounded-lg"
+        />
       </div>
 
       {/* 텍스트 정보 */}
