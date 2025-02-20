@@ -169,9 +169,9 @@ export const ProfilePage = () => {
     );
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
-      <div className="max-w-lg w-full bg-white p-8 rounded-xl shadow-lg">
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-green-50 to-green-100 py-6">
+      <div className="max-w-lg w-full bg-white/90 p-8 rounded-2xl shadow-2xl backdrop-blur-md">
+        <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">
           프로필 설정 🏡
         </h2>
 
@@ -306,35 +306,35 @@ export const ProfilePage = () => {
 
         {profile ? (
           <>
-            <p className="text-xl font-semibold text-gray-800">
-              {profile.name || '사용자'}
-            </p>
-            {isEditing ? (
+            <div className="mt-6 flex flex-col sm:flex-row gap-4">
+              {isEditing ? (
+                <button
+                  onClick={handleUpdateProfile}
+                  className="bg-[#64B17C] text-white px-6 py-3 rounded-xl shadow-lg transition duration-300 ease-in-out hover:bg-opacity-80"
+                >
+                  저장하기
+                </button>
+              ) : (
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="bg-[#64B17C] text-white px-6 py-3 rounded-xl shadow-lg transition duration-300 ease-in-out hover:bg-opacity-80"
+                >
+                  수정하기
+                </button>
+              )}
+
               <button
-                onClick={handleUpdateProfile}
-                className="bg-green-500 text-white px-4 py-2 rounded mt-4"
+                onClick={handleDeleteProfile}
+                className="bg-red-400 text-white px-6 py-3 rounded-xl shadow-lg transition duration-300 ease-in-out hover:bg-opacity-80"
               >
-                저장하기
+                프로필 삭제
               </button>
-            ) : (
-              <button
-                onClick={() => setIsEditing(true)}
-                className="bg-blue-500 text-white px-4 py-2 rounded mt-4"
-              >
-                수정하기
-              </button>
-            )}
-            <button
-              onClick={handleDeleteProfile}
-              className="bg-red-500 text-white px-4 py-2 rounded mt-4 ml-2"
-            >
-              프로필 삭제
-            </button>
+            </div>
           </>
         ) : (
           <button
             onClick={handleCreateProfile}
-            className="bg-green-500 text-white px-4 py-2 rounded"
+            className="bg-[#64B17C] text-white px-6 py-3 rounded-xl shadow-lg transition duration-300 ease-in-out hover:bg-opacity-80"
           >
             새 프로필 생성
           </button>
