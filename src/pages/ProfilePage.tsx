@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useAtom } from 'jotai';
 import {
   profileAtom,
@@ -10,6 +10,18 @@ import { UserApi } from '../Api/User';
 
 const defaultProfileImage = '';
 
+const GENDER_MAP: Record<string, string> = {
+  M: '남성',
+  F: '여성',
+  '': '',
+  null: '',
+};
+const REVERSE_GENDER_MAP: Record<string, string> = {
+  남성: 'M',
+  여성: 'F',
+  '': '',
+};
+
 const VALID_ALLERGIES = ['유제품', '글루텐', '견과류'];
 const VALID_PREFERENCES = ['채식', '비건', '저염식', '고단백'];
 
@@ -18,6 +30,7 @@ export const ProfilePage = () => {
   const [isEditing, setIsEditing] = useAtom(isEditingAtom);
   const [loading, setLoading] = useAtom(loadingAtom);
   const [error, setError] = useAtom(errorAtom);
+  const isImageChanged = useRef(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
@@ -26,6 +39,7 @@ export const ProfilePage = () => {
         const userData = await UserApi.getProfile();
         setProfile({
           ...userData,
+          gender: userData.gender || 'M',
           profileImage: userData.profileImage || defaultProfileImage,
         });
       } catch (err) {
@@ -59,7 +73,7 @@ export const ProfilePage = () => {
   const handleUpdateProfile = async () => {
     try {
       setLoading(true);
-      await UserApi.updateProfile(profile);
+      await UserApi.updateProfile(profile, isImageChanged.current);
       alert('프로필이 업데이트되었습니다!');
       setIsEditing(false);
     } catch (err) {
@@ -77,13 +91,13 @@ export const ProfilePage = () => {
         name: '',
         profileImage: '',
         nickname: '',
-        gender: '남성',
+        gender: 'M',
         age: 0,
         height: 0,
         weight: 0,
         target_weight: 0,
         allergies: [],
-        foodPreferences: [],
+        preferences: [],
       });
       alert('프로필이 삭제되었습니다!');
     } catch (err) {
@@ -109,40 +123,41 @@ export const ProfilePage = () => {
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
     if (!isEditing || !event.target.files?.[0]) return;
-
+    isImageChanged.current = true;
     const file = event.target.files[0];
 
     try {
       const base64 = await convertFileToBase64(file);
       setProfile((prev) => ({ ...prev, profileImage: base64 }));
-      localStorage.setItem('profileImage', base64);
     } catch (error) {
       console.error('이미지 변환 오류:', error);
     }
   };
 
-  useEffect(() => {
-    const savedImage = localStorage.getItem('profileImage');
-    if (savedImage) {
-      setProfile((prev) => ({ ...prev, profileImage: savedImage }));
-    }
-  }, [setProfile]);
-
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = event.target;
+    console.log('handleChange 이벤트:', name, value);
+
     const isNumberField = ['age', 'height', 'weight', 'target_weight'].includes(
       name,
     );
-    const newValue = isNumberField ? Math.max(0, Number(value)) : value;
+    const newValue =
+      name === 'gender'
+        ? REVERSE_GENDER_MAP[value] ?? ''
+        : isNumberField
+        ? Math.max(0, Number(value))
+        : value;
+
+    console.log('handleChange 변환 값:', newValue);
 
     setProfile((prev) => ({ ...prev, [name]: newValue }));
   };
 
   const handleCheckboxChange = (
     event: React.ChangeEvent<HTMLInputElement>,
-    category: 'allergies' | 'foodPreferences',
+    category: 'allergies' | 'preferences',
   ) => {
     const { value, checked } = event.target;
 
@@ -191,7 +206,7 @@ export const ProfilePage = () => {
             <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-2 border-[#64B17C] flex items-center justify-center overflow-hidden">
               {profile?.profileImage ? (
                 <img
-                  src={profile.profileImage}
+                  src={'http://13.124.215.58/media/' + profile.profileImage}
                   alt="프로필"
                   className="w-full h-full object-cover"
                 />
@@ -231,13 +246,13 @@ export const ProfilePage = () => {
               </label>
               {field.type === 'select' ? (
                 <select
-                  name={field.name}
-                  value={(profile as any)?.[field.name]}
+                  name="gender"
+                  value={GENDER_MAP[profile.gender] ?? ''}
                   onChange={handleChange}
                   className="w-full sm:flex-1 p-3 border rounded-lg focus:outline-none border-gray-300"
                   disabled={!isEditing}
                 >
-                  {field.options?.map((option) => (
+                  {Object.values(GENDER_MAP).map((option) => (
                     <option key={option} value={option}>
                       {option}
                     </option>
@@ -291,9 +306,9 @@ export const ProfilePage = () => {
                     type="checkbox"
                     value={preference}
                     checked={
-                      profile?.foodPreferences?.includes(preference) || false
+                      profile?.preferences?.includes(preference) || false
                     }
-                    onChange={(e) => handleCheckboxChange(e, 'foodPreferences')}
+                    onChange={(e) => handleCheckboxChange(e, 'preferences')}
                     disabled={!isEditing}
                     className="w-4 h-4 text-[#64B17C] border-gray-300 focus:ring focus:ring-green-200"
                   />
