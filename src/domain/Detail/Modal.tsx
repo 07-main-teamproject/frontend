@@ -10,17 +10,16 @@ export default function Modal({
   addFood,
   closeModal,
 }: {
-  addFood: (food: Food) => void;
+  addFood: (foodName: string) => void;
   closeModal: () => void;
 }) {
   const [searchQuery, setSearchQuery] = useAtom(searchQueryAtom);
-  const [foodResults, setFoodResults] = useState<Food[]>([]);
+  const [foodResults, setFoodResults] = useState<Food>();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     if (searchQuery.length < 3) {
-      setFoodResults([]);
       return;
     }
 
@@ -30,6 +29,7 @@ export default function Modal({
       try {
         const results = await searchFood(searchQuery);
         setFoodResults(results);
+        console.log(results);
       } catch (err) {
         setError('음식 검색 오류 발생!');
         console.error('Search error:', err);
@@ -70,31 +70,32 @@ export default function Modal({
 
         {/* 음식 리스트 */}
         <div className="mt-4 grid gap-2">
-          {foodResults.length > 0 ? (
-            foodResults.map((food, index) => (
-              <button
-                key={index}
-                className="flex items-center p-3 border rounded hover:bg-gray-100"
-                onClick={() => {
-                  console.log('음식 추가:', food);
-                  addFood(food);
-                  closeModal();
-                }}
-              >
-                <div className="text-left">
-                  <div className="font-bold">{food.name}</div>
-                  <div className="text-xs text-gray-500">
-                    <span>칼로리: {food.calories} kcal</span>
-                    {food.carbs && <span> | 탄수화물: {food.carbs}g</span>}
-                    {food.protein && <span> | 단백질: {food.protein}g</span>}
-                    {food.fat && <span> | 지방: {food.fat}g</span>}
-                  </div>
-                </div>
-              </button>
-            ))
-          ) : (
-            <p className="text-gray-500 text-center">검색 결과가 없습니다.</p>
-          )}
+          <button
+            className="flex items-center p-3 border rounded hover:bg-gray-100"
+            onClick={() => {
+              console.log('음식 추가:', foodResults);
+
+              if (foodResults) {
+                addFood(foodResults.name);
+              }
+
+              closeModal();
+            }}
+          >
+            <div className="text-left">
+              <div className="font-bold">{foodResults?.name}</div>
+              <div className="text-xs text-gray-500">
+                <span>칼로리: {foodResults?.calories} kcal</span>
+                {foodResults?.carbs && (
+                  <span> | 탄수화물: {foodResults.carbs}g</span>
+                )}
+                {foodResults?.protein && (
+                  <span> | 단백질: {foodResults.protein}g</span>
+                )}
+                {foodResults?.fat && <span> | 지방: {foodResults.fat}g</span>}
+              </div>
+            </div>
+          </button>
         </div>
       </div>
     </div>
