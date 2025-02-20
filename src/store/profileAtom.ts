@@ -5,13 +5,13 @@ interface ProfileData {
   name: string;
   profileImage: string;
   nickname: string;
-  gender: '남성' | '여성';
+  gender: 'M' | 'F';
   age: number;
   height: number;
   weight: number;
   target_weight: number;
   allergies: string[];
-  foodPreferences: string[];
+  preferences: string[];
 }
 
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api/user/profile/';
@@ -20,13 +20,13 @@ export const profileAtom = atom<ProfileData>({
   name: '',
   profileImage: '',
   nickname: '',
-  gender: '남성',
+  gender: 'M',
   age: 0,
   height: 0,
   weight: 0,
   target_weight: 0,
   allergies: [],
-  foodPreferences: [],
+  preferences: [],
 });
 
 export const loadingAtom = atom<boolean>(true);
