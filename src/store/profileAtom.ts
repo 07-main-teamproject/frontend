@@ -1,5 +1,6 @@
 import { atom } from 'jotai';
 import axios from 'axios';
+import { instance } from '../Api/Instance';
 
 interface ProfileData {
   name: string;
@@ -59,7 +60,7 @@ const handleApiRequest = async (
 
 export const fetchProfileAtom = atom(null, async (_get, set) => {
   await handleApiRequest(async () => {
-    const { data } = await axios.get<ProfileData>(API_BASE_URL);
+    const { data } = await instance.get<ProfileData>(API_BASE_URL);
 
     if (!data || !data.name) {
       throw new Error('서버에서 올바른 프로필 데이터를 반환하지 않았습니다.');
@@ -71,7 +72,7 @@ export const fetchProfileAtom = atom(null, async (_get, set) => {
 
 export const saveProfileAtom = atom(null, async (get, set) => {
   await handleApiRequest(async () => {
-    const { status } = await axios.put(API_BASE_URL, get(profileAtom));
+    const { status } = await instance.put(API_BASE_URL, get(profileAtom));
 
     if (status === 200) {
       set(isEditingAtom, false);
