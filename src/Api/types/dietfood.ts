@@ -25,7 +25,7 @@ export interface AddedFood {
 
 export interface AddFoodResponse {
   detail: string;
-  added_foods: AddedFood;
+  added_foods: AddedFood[];
 }
 
 /**

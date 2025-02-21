@@ -58,12 +58,12 @@ const CardDetail: React.FC = () => {
   };
 
   // 음식 추가
-  const addFood = async (foodId: string) => {
+  const addFood = async (foodExternalid: string) => {
     if (!diet || !id) return;
 
     try {
       const response = await addFoodToDiet(id, {
-        external_ids: [foodId],
+        external_ids: [foodExternalid],
         portion_size: 1,
         merge_quantity: true,
       });
@@ -76,7 +76,7 @@ const CardDetail: React.FC = () => {
 
       setDiet((prevDiet: any) => {
         if (!prevDiet || !prevDiet.diet_foods) {
-          return { ...prevDiet, diet_foods: [response.added_foods] };
+          return { ...prevDiet, diet_foods: response.added_foods };
         }
 
         const updatedDiet = {
@@ -90,6 +90,7 @@ const CardDetail: React.FC = () => {
         console.log('✅ 업데이트된 diet 상태:', updatedDiet);
         return updatedDiet;
       });
+      window.location.reload();
     } catch (error: any) {
       if (error.response) {
         alert(error.response.data?.detail || '음식을 추가할 수 없습니다.');
