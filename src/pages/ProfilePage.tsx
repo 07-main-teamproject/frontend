@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useAtom } from 'jotai';
 import {
   profileAtom,
@@ -6,143 +6,187 @@ import {
   loadingAtom,
   errorAtom,
 } from '../store/profileAtom';
-import { UserApi } from '../api/User';
+import { UserApi } from '../Api/User';
 
 const defaultProfileImage = '';
+
+const GENDER_MAP: Record<string, string> = {
+  M: '남성',
+  F: '여성',
+  '': '',
+  null: '',
+};
+const REVERSE_GENDER_MAP: Record<string, string> = {
+  남성: 'M',
+  여성: 'F',
+  '': '',
+};
 
 const VALID_ALLERGIES = ['유제품', '글루텐', '견과류'];
 const VALID_PREFERENCES = ['채식', '비건', '저염식', '고단백'];
 
-const ProfilePage = () => {
+export const ProfilePage = () => {
   const [profile, setProfile] = useAtom(profileAtom);
   const [isEditing, setIsEditing] = useAtom(isEditingAtom);
   const [loading, setLoading] = useAtom(loadingAtom);
   const [error, setError] = useAtom(errorAtom);
+  const isImageChanged = useRef(false);
 
   useEffect(() => {
     const fetchProfile = async () => {
       try {
         setLoading(true);
-        const backendProfile = await UserApi.getProfile();
-        setProfile((prev) => ({
-          ...prev,
-          ...backendProfile,
-          profileImage: backendProfile.profileImage || defaultProfileImage,
-        }));
+        const userData = await UserApi.getProfile();
+        setProfile({
+          ...userData,
+          gender: userData.gender || 'M',
+          profileImage: userData.profileImage || defaultProfileImage,
+        });
       } catch (err) {
-        console.error('프로필 불러오기 실패:', err);
         setError('프로필을 불러오는 중 오류가 발생했습니다.');
       } finally {
         setLoading(false);
       }
     };
     fetchProfile();
-  }, [setLoading, setProfile, setError]);
+  }, []); // 의존성 배열 최소화
+
+  const handleCreateProfile = async () => {
+    try {
+      setLoading(true);
+      const newProfile = {
+        name: '새 사용자',
+        age: 25,
+        height: 170,
+        weight: 65,
+      };
+      const userData = await UserApi.createProfile(newProfile);
+      setProfile(userData);
+      alert('새 프로필이 생성되었습니다!');
+    } catch (err) {
+      setError('프로필 생성 중 오류가 발생했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUpdateProfile = async () => {
+    try {
+      setLoading(true);
+      await UserApi.updateProfile(profile, isImageChanged.current);
+      alert('프로필이 업데이트되었습니다!');
+      setIsEditing(false);
+    } catch (err) {
+      setError('프로필 업데이트 중 오류가 발생했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDeleteProfile = async () => {
+    try {
+      setLoading(true);
+      await UserApi.deleteProfile();
+      setProfile({
+        name: '',
+        profileImage: '',
+        nickname: '',
+        gender: 'M',
+        age: 0,
+        height: 0,
+        weight: 0,
+        target_weight: 0,
+        allergies: [],
+        preferences: [],
+      });
+      alert('프로필이 삭제되었습니다!');
+    } catch (err) {
+      setError('프로필 삭제 중 오류가 발생했습니다.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const convertFileToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
-      reader.onload = () => resolve(reader.result as string); // 변환 성공 시 Base64 반환
-      reader.onerror = (error) => reject(error);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => {
+        reader.abort();
+        reject(error);
+      };
     });
   };
 
   const handleImageChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    if (!isEditing) return;
-    if (!event.target.files?.[0]) return;
-
+    if (!isEditing || !event.target.files?.[0]) return;
+    isImageChanged.current = true;
     const file = event.target.files[0];
 
     try {
       const base64 = await convertFileToBase64(file);
       setProfile((prev) => ({ ...prev, profileImage: base64 }));
-      localStorage.setItem('profileImage', base64); // `localStorage`에 저장
     } catch (error) {
       console.error('이미지 변환 오류:', error);
     }
   };
 
-  useEffect(() => {
-    const savedImage = localStorage.getItem('profileImage');
-    if (savedImage) {
-      setProfile((prev) => ({ ...prev, profileImage: savedImage }));
-    }
-  }, []); // 새로고침 시 유지
-
   const handleChange = (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
   ) => {
     const { name, value } = event.target;
+    console.log('handleChange 이벤트:', name, value);
+
     const isNumberField = ['age', 'height', 'weight', 'target_weight'].includes(
       name,
     );
-    const newValue = isNumberField
-      ? value === ''
-        ? null
-        : Math.max(0, Number(value))
-      : value;
+    const newValue =
+      name === 'gender'
+        ? REVERSE_GENDER_MAP[value] ?? ''
+        : isNumberField
+        ? Math.max(0, Number(value))
+        : value;
 
-    setProfile((prev) => ({
-      ...prev,
-      [name]: newValue,
-    }));
+    console.log('handleChange 변환 값:', newValue);
+
+    setProfile((prev) => ({ ...prev, [name]: newValue }));
   };
 
   const handleCheckboxChange = (
     event: React.ChangeEvent<HTMLInputElement>,
-    category: 'allergies' | 'foodPreferences',
+    category: 'allergies' | 'preferences',
   ) => {
     const { value, checked } = event.target;
 
-    setProfile((prev) => {
-      const updatedValues: string[] = checked
-        ? [...prev[category], value]
-        : prev[category].filter((item) => item !== value);
-
-      return { ...prev, [category]: updatedValues };
-    });
+    setProfile((prev) => ({
+      ...prev,
+      [category]: checked
+        ? [...(prev?.[category] || []), value]
+        : prev[category].filter((item) => item !== value),
+    }));
   };
 
-  const handleSaveProfile = async () => {
-    try {
-      await UserApi.updateProfile({ ...profile, profileImage: undefined });
-
-      if (profile.profileImage) {
-        localStorage.setItem('profileImage', profile.profileImage);
-      }
-
-      alert('프로필이 저장되었습니다!');
-      setIsEditing(false);
-    } catch (error) {
-      console.error('프로필 저장 실패:', error);
-      setError('프로필 저장 중 오류가 발생했습니다.');
-    }
-  };
-
+  // 로딩 및 에러 표시를 컴포넌트 상단에서 처리
   if (loading)
     return (
-      <>
-        <div className="min-h-screen flex items-center justify-center">
-          로딩 중...
-        </div>
-      </>
+      <div className="min-h-screen flex items-center justify-center">
+        로딩 중...
+      </div>
     );
   if (error)
     return (
-      <>
-        <div className="min-h-screen flex items-center justify-center text-red-500">
-          {error}
-        </div>
-      </>
+      <div className="min-h-screen flex items-center justify-center text-red-500">
+        {error}
+      </div>
     );
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6">
-      <div className="max-w-lg w-full bg-white p-8 rounded-xl shadow-lg">
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-green-50 to-green-100 py-6">
+      <div className="max-w-lg w-full bg-white/90 p-8 rounded-2xl shadow-2xl backdrop-blur-md">
+        <h2 className="text-3xl font-bold text-center text-gray-900 mb-8">
           프로필 설정 🏡
         </h2>
 
@@ -160,7 +204,7 @@ const ProfilePage = () => {
               disabled={!isEditing}
             />
             <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-full border-2 border-[#64B17C] flex items-center justify-center overflow-hidden">
-              {profile.profileImage ? (
+              {profile?.profileImage ? (
                 <img
                   src={profile.profileImage}
                   alt="프로필"
@@ -172,7 +216,7 @@ const ProfilePage = () => {
             </div>
           </label>
           <p className="text-xl font-semibold text-gray-800">
-            {profile.nickname || '사용자'}
+            {profile?.nickname || '사용자'}
           </p>
         </div>
 
@@ -202,13 +246,13 @@ const ProfilePage = () => {
               </label>
               {field.type === 'select' ? (
                 <select
-                  name={field.name}
-                  value={(profile as any)[field.name]}
+                  name="gender"
+                  value={GENDER_MAP[profile.gender] ?? ''}
                   onChange={handleChange}
                   className="w-full sm:flex-1 p-3 border rounded-lg focus:outline-none border-gray-300"
                   disabled={!isEditing}
                 >
-                  {field.options?.map((option) => (
+                  {Object.values(GENDER_MAP).map((option) => (
                     <option key={option} value={option}>
                       {option}
                     </option>
@@ -218,7 +262,7 @@ const ProfilePage = () => {
                 <input
                   type={field.type}
                   name={field.name}
-                  value={(profile as any)[field.name]}
+                  value={(profile as any)?.[field.name] || ''}
                   onChange={handleChange}
                   min="0"
                   className="w-full sm:flex-1 p-3 border rounded-lg focus:outline-none border-gray-300"
@@ -239,7 +283,7 @@ const ProfilePage = () => {
                   <input
                     type="checkbox"
                     value={allergy}
-                    checked={profile.allergies.includes(allergy)} // 🔥 배열 기반으로 변경
+                    checked={profile?.allergies?.includes(allergy) || false}
                     onChange={(e) => handleCheckboxChange(e, 'allergies')}
                     disabled={!isEditing}
                     className="w-4 h-4 text-[#64B17C] border-gray-300 focus:ring focus:ring-green-200"
@@ -261,8 +305,10 @@ const ProfilePage = () => {
                   <input
                     type="checkbox"
                     value={preference}
-                    checked={profile.foodPreferences.includes(preference)} // 🔥 배열로 관리
-                    onChange={(e) => handleCheckboxChange(e, 'foodPreferences')}
+                    checked={
+                      profile?.preferences?.includes(preference) || false
+                    }
+                    onChange={(e) => handleCheckboxChange(e, 'preferences')}
                     disabled={!isEditing}
                     className="w-4 h-4 text-[#64B17C] border-gray-300 focus:ring focus:ring-green-200"
                   />
@@ -273,26 +319,42 @@ const ProfilePage = () => {
           </div>
         </div>
 
-        <div className="mt-6 flex flex-col sm:flex-row space-y-4 sm:space-y-0 sm:space-x-4">
-          {!isEditing ? (
-            <button
-              onClick={() => setIsEditing(true)}
-              className="w-full lg:w-full bg-[#64B17C] text-white py-3 rounded-lg text-lg font-semibold transition hover:bg-[#569b6e] shadow-md"
-            >
-              수정하기
-            </button>
-          ) : (
-            <button
-              onClick={handleSaveProfile}
-              className="w-full lg:w-full bg-[#64B17C] text-white py-3 rounded-lg text-lg font-semibold transition hover:bg-[#569b6e] shadow-md"
-            >
-              저장하기
-            </button>
-          )}
-        </div>
+        {profile ? (
+          <>
+            <div className="mt-6 flex flex-col sm:flex-row gap-4">
+              {isEditing ? (
+                <button
+                  onClick={handleUpdateProfile}
+                  className="bg-[#64B17C] text-white px-6 py-3 rounded-xl shadow-lg transition duration-300 ease-in-out hover:bg-opacity-80"
+                >
+                  저장하기
+                </button>
+              ) : (
+                <button
+                  onClick={() => setIsEditing(true)}
+                  className="bg-[#64B17C] text-white px-6 py-3 rounded-xl shadow-lg transition duration-300 ease-in-out hover:bg-opacity-80"
+                >
+                  수정하기
+                </button>
+              )}
+
+              <button
+                onClick={handleDeleteProfile}
+                className="bg-red-400 text-white px-6 py-3 rounded-xl shadow-lg transition duration-300 ease-in-out hover:bg-opacity-80"
+              >
+                프로필 삭제
+              </button>
+            </div>
+          </>
+        ) : (
+          <button
+            onClick={handleCreateProfile}
+            className="bg-[#64B17C] text-white px-6 py-3 rounded-xl shadow-lg transition duration-300 ease-in-out hover:bg-opacity-80"
+          >
+            새 프로필 생성
+          </button>
+        )}
       </div>
     </div>
   );
 };
-
-export default ProfilePage;
