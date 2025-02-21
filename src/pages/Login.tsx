@@ -67,7 +67,9 @@ const LoginForm = () => {
               {...register('email', validationRules.email)}
             />
             {errors.email && (
-              <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+              <p className="text-red-500 text-sm mt-1">
+                {errors.email.message}
+              </p>
             )}
           </div>
 
@@ -83,7 +85,9 @@ const LoginForm = () => {
               {...register('password', validationRules.password)}
             />
             {errors.password && (
-              <p className="text-red-500 text-sm mt-1">{errors.password.message}</p>
+              <p className="text-red-500 text-sm mt-1">
+                {errors.password.message}
+              </p>
             )}
           </div>
 
@@ -124,7 +128,10 @@ const LoginForm = () => {
 
         <p className="text-center text-gray-600 mt-4">
           아직 회원이 아니신가요?{' '}
-          <Link to="/signup" className="text-[#64B17C] font-medium hover:underline">
+          <Link
+            to="/signup"
+            className="text-[#64B17C] font-medium hover:underline"
+          >
             회원가입
           </Link>
         </p>
