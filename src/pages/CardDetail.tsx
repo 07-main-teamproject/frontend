@@ -58,20 +58,45 @@ const CardDetail: React.FC = () => {
   };
 
   // 음식 추가
-  const addFood = async (foodName: string) => {
+  const addFood = async (foodId: string) => {
     if (!diet || !id) return;
 
     try {
-      const addedFood = await addFoodToDiet(id, { name: foodName, amount: 1 });
-      setDiet((prevDiet: any) => ({
-        ...prevDiet,
-        diet_foods: [...prevDiet.diet_foods, addedFood],
-      }));
-    } catch (error) {
-      console.error('음식 추가 오류:', error);
-    }
+      const response = await addFoodToDiet(id, {
+        external_ids: [foodId],
+        portion_size: 1,
+        merge_quantity: true,
+      });
 
-    setIsModalOpen(false);
+      console.log('✅ API 응답 데이터:', response);
+
+      if (!response || !response.added_foods) {
+        return;
+      }
+
+      setDiet((prevDiet: any) => {
+        if (!prevDiet || !prevDiet.diet_foods) {
+          return { ...prevDiet, diet_foods: [response.added_foods] };
+        }
+
+        const updatedDiet = {
+          ...prevDiet,
+          diet_foods: [
+            ...prevDiet.diet_foods,
+            { food: response.added_foods, portion_size: 1 },
+          ],
+        };
+
+        console.log('✅ 업데이트된 diet 상태:', updatedDiet);
+        return updatedDiet;
+      });
+    } catch (error: any) {
+      if (error.response) {
+        alert(error.response.data?.detail || '음식을 추가할 수 없습니다.');
+      } else {
+        alert('네트워크 오류 또는 서버 응답 없음');
+      }
+    }
   };
 
   // 음식 삭제

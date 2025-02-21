@@ -10,7 +10,7 @@ export default function Modal({
   addFood,
   closeModal,
 }: {
-  addFood: (foodName: string) => void;
+  addFood: (foodName: string) => Promise<void>;
   closeModal: () => void;
 }) {
   const [searchQuery, setSearchQuery] = useAtom(searchQueryAtom);

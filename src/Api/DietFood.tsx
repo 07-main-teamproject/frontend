@@ -1,12 +1,26 @@
 import { instance, ENDPOINT } from './Instance';
+import {
+  AddFoodRequest,
+  AddFoodResponse,
+  UpdatePortionSizeResponse,
+} from './types/dietfood';
+// interface addFood = {
+
+// }
+
+// {
+//   "external_ids": ["5025125000112"],     -> 여러 개 가능
+//   "portion_size":  200 ,
+//   "merge_quantity": true     -> 음식이 이미 존재하면 양만 수정 (true면 기존 양에 더함, false면 덮어씌움)
+// }
 
 // 특정 식단에 음식 추가
 export const addFoodToDiet = async (
   dietId: string,
-  foodData: { name: string; amount: number },
+  foodData: AddFoodRequest,
 ) => {
   try {
-    const response = await instance.post(
+    const response = await instance.post<AddFoodResponse>(
       `${ENDPOINT.addDietFood}${dietId}/`,
       foodData,
     );
@@ -23,7 +37,7 @@ export const removeFoodFromDiet = async (dietId: string, foodId: string) => {
     const response = await instance.delete(
       `${ENDPOINT.removeDietFood}${dietId}/`,
       {
-        data: { foodId },
+        data: { external_ids: [foodId] },
       },
     );
     return response.data;
@@ -40,11 +54,11 @@ export const updateFoodPortion = async (
   newAmount: number,
 ) => {
   try {
-    const response = await instance.put(
+    const response = await instance.put<UpdatePortionSizeResponse>(
       `${ENDPOINT.updateDietFood}${dietId}/`,
       {
-        foodId,
-        amount: newAmount,
+        external_ids: [foodId],
+        portion_size: newAmount,
       },
     );
     return response.data;

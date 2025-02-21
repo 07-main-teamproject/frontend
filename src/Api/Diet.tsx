@@ -6,6 +6,7 @@ export const getAllDiets = async (): Promise<AllDietsResponse[]> => {
     const response = await instance.get<AllDietsResponse[]>(
       ENDPOINT.dietDefault,
     );
+    console.log(response);
     return response.data;
   } catch (error) {
     console.error('식단 목록 조회 오류:', error);
