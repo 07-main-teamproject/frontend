@@ -10,7 +10,7 @@ export default function Modal({
   addFood,
   closeModal,
 }: {
-  addFood: (foodName: string) => Promise<void>;
+  addFood: (id: string) => Promise<void>;
   closeModal: () => void;
 }) {
   const [searchQuery, setSearchQuery] = useAtom(searchQueryAtom);
@@ -76,7 +76,7 @@ export default function Modal({
               console.log('음식 추가:', foodResults);
 
               if (foodResults) {
-                addFood(foodResults.name);
+                addFood(foodResults.external_id);
               }
 
               closeModal();
