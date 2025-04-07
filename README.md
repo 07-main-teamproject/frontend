@@ -73,7 +73,7 @@
 ## 🗂 산출물 (추후 추가 예정)
 
 - [기획서 Notion 링크](#)
-- [Figma 와이어프레임](#)
+- [Figma 와이어프레임](#https://www.figma.com/proto/zUvHFZCDLrODqUSgNPRkIp/Diet-Story?node-id=65-696&t=FrafyxyyCdG5HgNf-1)
 - [API 명세서](#)
 - [팀 프로젝트 회고 PDF](#)
 
