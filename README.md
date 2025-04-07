@@ -1,50 +1,65 @@
-# React + TypeScript + Vite
+✅ Project Summary – 맞춤형 식단 추천 서비스 
+�� 프로젝트명: 맞춤형 식단 추천 플랫폼 (2024.03) 
+사용자의 건강 정보와 음식 선호를 기반으로 맞춤형 식단을 추천하는 웹 서비스 
+강지은 4
+�� 프로젝트 개요 
+본 프로젝트는 사용자의 개인 프로필(나이, 성별, 신장, 체중, 알레르기, 음식 선호도) 정 보를 기반으로 
+맞춤형 식단을 자동 생성하고, 영양 성분을 분석하며, 사용자가 직접 식단을 수정·관리할 수 있는 기능을 제공합니다. 
+✅ 주요 기능 
+기능 
+설명
+맞춤형 식단 추천
+입력된 신체정보와 음식 선호도 기반으로 식단 자 동 구성
+영양소 계산 
+각 음식의 탄단지 비율 및 총 칼로리 자동 계산
+식단 커스터마이징 
+추천된 식단에서 음식 추가/삭제 가능
+식단 기록 및 일별 통계 
+사용자 맞춤 기록 관리 + 일별 섭취 통계 제공
+실시간 음식 검색
+외부 API(OpenFoodFacts 등)를 활용한 음식 정 보 조회
+반응형 UI
+모바일·데스크톱 대응, 다양한 해상도에 최적화된 UI 제공
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-Currently, two official plugins are available:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+ 담당 역할 (강지은) 
+메인 페이지 및 식단 상세 페이지 개발 
+사용자 입력값 기반 식단 추천 로직 개발 
+식단 상세 정보 페이지 개발 (영양성분, 칼로리, 대체 음식) 
+외부 API와 연동해 음식 데이터를 실시간으로 불러오는 기능 구현 
+음식 필터 기능 및 사용자 친화적 UI 구성 
+�� 기술 스택 
+프레임워크 & 언어: React, TypeScript, Vite 
+전역 상태 관리: Jotai 
+스타일링: Tailwind CSS 
+API 통신: Axios 
+배포: Netlify 
+강지은 5
+버전 관리: Git + GitHub 
+�� 기술적 선택 이유 
+기술 
+이유
+React + TypeScript 
+유지보수성과 타입 안정성 확보
+Jotai 
+사용이 간편하고 리렌더링을 최소화할 수 있는 전역 상태 관리
+Vite 
+빠른 개발 환경 구성 및 핫 리로딩 성능
+Tailwind CSS 
+빠른 UI 설계와 클래스 기반 스타일 유지보수
+Axios 
+직관적인 API 요청 처리 및 에러 핸들링 용이
 
-## Expanding the ESLint configuration
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
 
-- Configure the top-level `parserOptions` property like this:
+�� 프로젝트 성과 & 회고 
+�� 배운 점 
+짧은 시간 내 MVP 구현을 목표로 기획부터 배포까지 완성해보며 전체 개발 프로세스를 경험 
+Jotai를 활용한 상태 관리의 장점과 한계를 직접 체험 (리렌더링 이슈, 전역 의존성 고 려) 
+GitHub에서 브랜치 전략을 활용하며 코드 리뷰와 충돌 해결의 중요성을 실감 
+�� 아쉬웠던 점 & 개선 방향 
+현재는 음식 리스트만 추천되며, 레시피 API를 추가로 연동해 요리 가이드를 제공하고자 함 
+사용자 피드백 기반으로 UI/UX를 개선 예정 (버튼 위치, 시각적 우선순위, 접근성 등) 검색 기능의 성능 최적화 필요 → Debounce 적용, API 호출 횟수 최소화 예정 
+“건강한 식단을 추천하는 서비스처럼, 사용자에게 필요한 정보를 명확히 전달하는 UI를 만드 는 개발자가 되고 싶습니다.” 
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
-
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
